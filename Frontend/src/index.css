@@ -1,0 +1,82 @@
+@import url("https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap");
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Knewave&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .small-footer-text {
+    @apply text-sm my-2 w-fit text-gray-300 hover:scale-105 hover:underline transition duration-150 ease-in-out cursor-pointer;
+  }
+
+  .heading-text-gray {
+    @apply text-black;
+  }
+
+  .subtitle-text-gray {
+    @apply text-[#929292];
+  }
+
+  .para-text-gray {
+    @apply text-[#8b8b8b];
+  }
+
+  .bg-primary {
+    @apply bg-[#ebf2fa];
+    /* @apply bg-white; */
+  }
+
+  .bg-secondary-color {
+    @apply bg-[#05668d] text-white;
+  }
+
+  .button-color {
+    @apply bg-[#FFD500] text-white hover:bg-[#FDC500];
+  }
+
+  .accent-color {
+    @apply text-[#FFD500];
+  }
+
+  .loader-red {
+    @apply bg-[#003F88];
+  }
+}
+
+/* 
+00296B,003F88,00509D,FDC500,FFD500
+*/
+
+/* 
+05668d,
+427aa1,
+ebf2fa,
+228b22,
+a9a9a9
+*/
+
+/*my changes*/
+
+/*apply on all backgrounds */
+.bg-color-standard{
+  @apply bg-[#EBF2FA] text-black
+}
+
+/* 
+.bg-color-secondary{
+  @apply bg-[#EBF2FA]
+} */
+
+.bg-color-tertiary{
+  @apply bg-[#FFDED5]
+}
+
+.bg-button{
+  @apply bg-[#295F98] text-white ;
+}
+
+.bg-green{
+  @apply bg-[#22C55E];
+}

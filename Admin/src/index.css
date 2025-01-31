@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .text-dark-blue {
+    @apply text-[#0041f5];
+  }
+
+  .bg-dark-blue {
+    @apply bg-[#0041f5] text-white;
+  }
+
+  .bg-primary {
+    @apply bg-[#eef2ff];
+  }
+
+  .bg-decent-white {
+    @apply bg-[#F3F4F6];
+  }
+
+  .small-footer-text {
+    @apply text-sm my-2 w-fit text-gray-300 hover:scale-105 hover:underline transition duration-150 ease-in-out cursor-pointer;
+  }
+}

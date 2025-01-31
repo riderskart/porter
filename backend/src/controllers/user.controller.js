@@ -1,0 +1,284 @@
+import { User } from "../models/user.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import jwt from "jsonwebtoken";
+import { io } from "../app.js";
+
+const generateAccessAndRefreshTokens = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+    const AccessToken = await user.generateAccessToken();
+    const RefreshToken = await user.generateRefreshToken();
+
+    return { AccessToken, RefreshToken };
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(
+      500,
+      "Something went wrong while generating access and refresh tokens"
+    );
+  }
+};
+
+const RegisterUser = asyncHandler(async (req, res) => {
+  const { name, number, email, password } = req.body;
+
+  if (
+    [name, email, password].some(function (field) {
+      field.trim() === "";
+    })
+  ) {
+    throw new ApiError(400, "All fields must be filled in");
+  }
+
+  const existingUser = await User.findOne({ email });
+
+  if (existingUser) throw new ApiError(404, "User already exists");
+
+  const newUser = await User.create({
+    name,
+    number,
+    email,
+    password,
+  });
+
+  const CreatedUser = await User.findById(newUser._id).select("-password ");
+
+  if (!CreatedUser)
+    throw new ApiError(
+      500,
+      "Failed to create user due to some internal error! Please try again"
+    );
+
+  const { AccessToken, RefreshToken } = await generateAccessAndRefreshTokens(
+    CreatedUser?._id
+  );
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  res
+    .status(201)
+    .cookie("RefreshToken", RefreshToken, options)
+    .cookie("AccessToken", AccessToken, options)
+    .json(
+      new ApiResponse(
+        201,
+        {
+          user: CreatedUser,
+          tokens: {
+            AccessToken,
+            RefreshToken,
+          },
+        },
+        "User registration completed successfully"
+      )
+    );
+});
+
+const Login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password)
+    throw new ApiError(401, "email and password are required");
+
+  const user = await User.findOne({ email });
+
+  if (!user) throw new ApiError(404, "Provided email is not found");
+
+  const isValid = await user.isPasswordCorrect(password);
+
+  if (!isValid) throw new ApiError(401, "Entered Credential is not correct");
+
+  const { AccessToken, RefreshToken } = await generateAccessAndRefreshTokens(
+    user?._id
+  );
+
+  io.emit("newOrder", {
+    title: "Socket connect successfully",
+    orderId: 12345,
+    body: "Got a new order",
+  });
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(201)
+    .cookie("RefreshToken", RefreshToken, options)
+    .cookie("AccessToken", AccessToken, options)
+    .json(
+      new ApiResponse(
+        201,
+        {
+          user,
+          tokens: {
+            AccessToken,
+            RefreshToken,
+          },
+        },
+        "User Logged In successfully"
+      )
+    );
+});
+
+const AdminLogin = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password)
+    throw new ApiError(401, "email and password are required");
+  const Admin = await User.findOne({ email });
+  if (!Admin) throw new ApiError(404, "Provided email is not found");
+  const isValid = await Admin.isPasswordCorrect(password);
+  if (!isValid) throw new ApiError(401, "Entered Credential is not correct");
+  const { AccessToken, RefreshToken } = await generateAccessAndRefreshTokens(
+    Admin?._id
+  );
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(201)
+    .cookie("RefreshToken", RefreshToken, options)
+    .cookie("AccessToken", AccessToken, options)
+    .json(
+      new ApiResponse(
+        201,
+        {
+          Admin,
+          tokens: {
+            AccessToken,
+            RefreshToken,
+          },
+        },
+        "Admin Logged In successfully"
+      )
+    );
+});
+
+const LogOutUser = asyncHandler(async (req, res) => {
+  const LoggedOutUser = await User.findOneAndUpdate(req.user._id, {
+    $set: {
+      refreshToken: "1",
+    },
+  });
+
+  LoggedOutUser.save();
+
+  console.log(LoggedOutUser);
+  console.log("reached Logout");
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .clearCookie("AccessToken", options)
+    .clearCookie("RefreshToken", options);
+});
+
+const regenerateRefreshToken = asyncHandler(async (req, res) => {
+  try {
+    const token = req.cookies.RefreshToken || req.body.RefreshToken;
+
+    if (!token) throw new ApiError(401, "Unauthorized request");
+
+    const DecodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+
+    const user = await User.findById(DecodedToken._id).select(
+      "-password -refreshToken"
+    );
+
+    if (!user) throw new ApiError(400, "Invalid Token");
+
+    const { RefreshToken, AccessToken } = await generateAccessAndRefreshTokens(
+      user._id
+    );
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+
+    return res
+      .status(201)
+      .cookie("RefreshToken", RefreshToken, options)
+      .cookie("AccessToken", AccessToken, options)
+      .json(
+        new ApiResponse(
+          201,
+          {
+            user,
+            tokens: {
+              AccessToken,
+              RefreshToken,
+            },
+          },
+          "Refresh token regenerated successfully"
+        )
+      );
+  } catch (error) {
+    throw new ApiError(401, error.message || "Invalid Token");
+  }
+});
+
+const GetAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({});
+  if (users.length === 0) {
+    res
+      .status(201)
+      .json(new ApiResponse(201, "No users found", "Got the data"));
+  }
+
+  res.status(201).json(new ApiResponse(201, users, "All users found"));
+});
+
+const GetUserDetails = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+
+  if (!userId) throw new ApiError(401, "User Id is important");
+
+  const user = await User.findById(userId).populate("allOrders");
+  if (!user) throw new ApiError(404, "User not found");
+
+  res.status(201).json(new ApiResponse(201, user, "User details found"));
+});
+
+const ToggleBan = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await User.findById(userId);
+  if (!user) throw new ApiError(404, "User not found");
+
+  user.isBanned = !user.isBanned;
+  user.save();
+  res.status(200).json(new ApiResponse(200, user, "User status updated"));
+});
+
+const DeleteUser = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  if (!userId) throw new ApiError(400, "User ID is required");
+  const user = await User.findByIdAndDelete(userId);
+  if (!user) throw new ApiError(404, "User not found");
+  res.status(200).json(new ApiResponse(200, "User deleted successfully"));
+});
+
+export {
+  RegisterUser,
+  Login,
+  AdminLogin,
+  LogOutUser,
+  regenerateRefreshToken,
+  GetAllUsers,
+  GetUserDetails,
+  ToggleBan,
+  DeleteUser,
+};
