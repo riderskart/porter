@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import ButtonWrapper from "../../Components/Buttons";
 import Card from "../../Components/Card";
-import { User } from "lucide-react";
+import { Loader, User } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import Lottie from "lottie-react";
 import Loading from "../../assets/Loading/Loading.json";
 import { FetchData } from "../../utility/fetchFromAPI";
 import { useDispatch, useSelector } from "react-redux";
+import { formatDateTime } from "../../../../Admin/src/Utils/FormatDateTime";
 
 const UserProfile = () => {
   const user = useSelector((store) => store.UserInfo.user);
@@ -45,7 +46,9 @@ const UserProfile = () => {
     Navigate("/wallet-page", { replace: true });
   };
 
-  return (
+  return !CurrentUser ? (
+    <Loader />
+  ) : (
     <div className="flex w-full justify-center items-center h-screen">
       <section className="userDetails flex flex-col justify-between h-[80%] p-10">
         <h1 className="flex items-center text-blue-600 font-bold text-xl mb-5 ">
@@ -56,7 +59,9 @@ const UserProfile = () => {
         <Card>
           <div>
             <h1>User ID: {CurrentUser?._id}</h1>
-            <h2>Account Created At : {CurrentUser?.createdAt}</h2>
+            <h2>
+              Account Created At : {formatDateTime(CurrentUser?.createdAt)}
+            </h2>
           </div>
         </Card>
         <Card>

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import ButtonWrapper from "../../Components/Buttons";
-import { Eye, EyeOff } from "lucide-react";
+import { ChevronDown, ChevronRight, Eye, EyeOff } from "lucide-react";
 import { DomainUrl, FetchData } from "../../utility/fetchFromAPI";
 import { useDispatch } from "react-redux";
 import { alertError, alertSuccess } from "../../utility/Alert";
@@ -12,7 +12,6 @@ import io from "socket.io-client";
 import LogInImg from "../../assets/Home/LogIn1.jpeg";
 import LoginDriverImg from "../../assets/Home/LoginDriverImg.jpg";
 import Input from "../../Components/Input";
-// import { alertError, alertInfo } from "../../utility/";
 
 const socket = io(DomainUrl);
 
@@ -92,7 +91,7 @@ const LogIn = () => {
 
   return (
     <div className=" shadow-lg laptop:flex justify-center items-center w-full h-full bg-color-standard py-20 gap-20">
-      <section className="LOGIN-IMG w-[40%]">
+      <section className="LOGIN-IMG w-[40%] hidden lg-block ">
         {selectedForm === "Personal" ? (
           <img src={LogInImg} alt="" className="laptop:h-[60vh] phone:w-full" />
         ) : (
@@ -104,7 +103,7 @@ const LogIn = () => {
         )}
       </section>
 
-      <section className="Form_side bg-white border m-5 px-24  h-[60vh] rounded-lg shadow-lg ">
+      <section className="Form_side bg-white border m-5 px-24 rounded-lg shadow-lg ">
         <h1 className="text-center mt-2 mb-5 text-xl text-black font-bold font-serif heading-text-gray">
           Login
         </h1>
@@ -251,17 +250,23 @@ const LogIn = () => {
         )}
 
         <div className="Sign_UP_Options mb-3">
-          <h3 className="text-center text-black text-opacity-80">
+          <h3 className="text-center text-black text-opacity-80 shadow rounded-xl p-2">
             Don't have an account ?
-            <Link to={`/register`} className="text-red-400">
+            <Link to={`/register`} className="text-red-400 hover:underline">
               Register
             </Link>
           </h3>
         </div>
         <div className="Sign_UP_Options mb-3">
-          <h3 className="text-center text-black text-opacity-80">
-            Want to become delivery partner ?
-            <Link to={`/register-driver`} className="text-red-400">
+          <h3 className="flex justify-center items-center text-center text-black text-opacity-80 shadow rounded-xl p-2">
+            To become delivery partner{" "}
+            <span>
+              <ChevronRight />
+            </span>
+            <Link
+              to={`/register-driver`}
+              className="text-red-400 hover:underline"
+            >
               Register
             </Link>
           </h3>

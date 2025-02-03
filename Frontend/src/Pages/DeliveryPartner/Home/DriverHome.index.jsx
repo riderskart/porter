@@ -24,6 +24,7 @@ export default function DeliveryPartnerHome() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const user = useSelector((store) => store.UserInfo.user);
+  console.log(user);
   const [CurrentPartner, setPartner] = useState(null);
 
   const options = [
@@ -95,54 +96,6 @@ export default function DeliveryPartnerHome() {
 
     CreateAlert();
   }, [notifications]);
-
-  // For re-logging in after refreshing the page
-  // useEffect(() => {
-  //   async function reLogin() {
-  //     const RefreshToken = localStorage.getItem("RefreshToken");
-  //     if (!RefreshToken) {
-  //       console.log("No refresh token found");
-  //       return;
-  //     }
-
-  //     // Refresh the access token using refresh token
-  //     try {
-  //       const User = await FetchData("driver/refresh-token", "post", {
-  //         RefreshToken,
-  //       });
-
-  //       if (User.data.success) {
-  //         console.log(User);
-  //         localStorage.clear(); // will clear the all the data from localStorage
-  //         localStorage.setItem(
-  //           "AccessToken",
-  //           User.data.data.tokens.AccessToken
-  //         );
-  //         localStorage.setItem(
-  //           "RefreshToken",
-  //           User.data.data.tokens.RefreshToken
-  //         );
-
-  //         // Storing data inside redux store
-  //         Dispatch(clearUser());
-  //         Dispatch(addUser(User.data.data.user));
-  //         Dispatch(
-  //           addUser({
-  //             driver: true,
-  //             personal: false,
-  //           })
-  //         );
-  //         Dispatch(addAllAppointment(User.data.data.user.allAppointments));
-  //       }
-  //       return User;
-  //     } catch (error) {
-  //       console.log(error);
-  //       alertError(parseErrorMessage(error));
-  //     }
-  //   }
-
-  //   reLogin();
-  // }, []);
 
   // Handle selecting an option
   const handleSelectOption = (option) => {
@@ -446,7 +399,7 @@ export default function DeliveryPartnerHome() {
                 </div>
 
                 {/* center line */}
-                <div className="flex- mx-4 w-[50vw] border">
+                <div className="flex mx-4 w-[50vw] border hidden laptop:block">
                   <div className="h-0.5 bg-white w-full relative">
                     <div className="absolute -left-1.5 -top-1.5 w-3 h-3 rounded-full bg-white" />
                     <div className="absolute -right-1.5 -top-1.5 w-3 h-3 rounded-full bg-white" />

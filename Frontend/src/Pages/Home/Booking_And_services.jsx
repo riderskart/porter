@@ -135,7 +135,8 @@ const Booking_And_services = () => {
       </div>
 
       {/* booking section */}
-      <div className="Booking-section relative -top-32  phone:w-[90vw] phone:h-fit  laptop:w-[70vw] laptop:h-[40vh] bg-white rounded-xl  drop-shadow-lg ">
+      <div className="Booking-section relative -top-32 lg:mx-20 bg-white rounded-xl  drop-shadow-lg p-4 lg:p-0">
+        {/* <div className="Booking-section relative -top-32  phone:w-[90vw] phone:h-fit  laptop:w-[70vw] laptop:h-[40vh] bg-white rounded-xl  drop-shadow-lg "> */}
         {/* City btn */}
         <div className=" City-btn w-full laptop:hidden ">
           <button
@@ -157,8 +158,9 @@ const Booking_And_services = () => {
           </button>
         </div>
 
-        <div className="flex gap-5 laptop:hidden">
-          <div className="laptop:hidden flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll">
+        <div className="flex gap-5 laptop:hidden w-fit justify-center items-center">
+          {/* <div className="laptop:hidden flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll"> */}
+          <div className="hidden lg-block flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll">
             {VehicleData.map((field, index) => (
               <Vehicle key={index} field={field} />
             ))}

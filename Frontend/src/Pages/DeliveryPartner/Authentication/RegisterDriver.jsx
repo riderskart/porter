@@ -351,7 +351,7 @@ function RegisterDriver() {
           </div>
 
           {/* Plate No */}
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <Label>Plate Number:</Label>
             <Input
               type="text"
@@ -359,7 +359,7 @@ function RegisterDriver() {
               placeholder="Plate Number"
               required
             />
-          </div>
+          </div> */}
 
           {/* Insurance Image */}
           <div className="mb-3">

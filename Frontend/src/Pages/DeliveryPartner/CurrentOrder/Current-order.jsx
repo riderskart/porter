@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { FetchData } from "../../../utility/fetchFromAPI";
 import Lottie from "lottie-react";
 import Loading from "../../../assets/Loading/Loading.json";
+import Loader from "../../../Components/Loader";
 
 export default function CurrentProduct() {
   const { orderId } = useParams();
@@ -28,9 +29,7 @@ export default function CurrentProduct() {
   }, []);
 
   return !currentOrder ? (
-    <div className="w-screen  flex justify-center items-center">
-      <Lottie width={50} height={50} animationData={Loading} />
-    </div>
+    <Loader/>
   ) : (
     <div className="min-h-screen bg-gray-100 p-4 phone:p-6 lg:p-8">
       <div className="max-w-[80vw] mx-auto">

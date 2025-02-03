@@ -2,7 +2,10 @@ import axios from "axios";
 
 const authenticator = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/auth-image-kit");
+    const response = await axios.get(
+      "https://riders-kart.onrender.com/auth-image-kit"
+    );
+    // const response = await axios.get("http://localhost:3000/auth-image-kit");
 
     if (response.statusText !== "OK") {
       // const errorText = await response.text();

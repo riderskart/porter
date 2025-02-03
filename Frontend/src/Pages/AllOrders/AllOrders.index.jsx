@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FetchData } from "../../utility/fetchFromAPI";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import Loader from "../../Components/Loader";
 
 const AllOrders = () => {
-  
   const [allOrders, setAllOrders] = useState();
 
   // Functions
@@ -19,7 +19,9 @@ const AllOrders = () => {
     getAllOrders();
   }, []);
 
-  return (
+  return !allOrders ? (
+    <Loader />
+  ) : (
     <div className="pt-10 bg-color-standard">
       <h1 className="text-center text-4xl font-Fredoka">All Orders</h1>
 
