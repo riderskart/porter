@@ -135,7 +135,7 @@ function RegisterDriver() {
       });
 
       // Navigate to home page and show success message
-      navigate("/drivers-home");
+      navigate("/");
     } catch (error) {
       console.log(error);
       // alertError(parseErrorMessage(error.response.data));

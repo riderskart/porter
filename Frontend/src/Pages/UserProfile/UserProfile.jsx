@@ -7,7 +7,7 @@ import Lottie from "lottie-react";
 import Loading from "../../assets/Loading/Loading.json";
 import { FetchData } from "../../utility/fetchFromAPI";
 import { useDispatch, useSelector } from "react-redux";
-import { formatDateTime } from "../../../../Admin/src/Utils/FormatDateTime";
+import { formatDateTime } from "../../utility/FormatDateTime";
 
 const UserProfile = () => {
   const user = useSelector((store) => store.UserInfo.user);

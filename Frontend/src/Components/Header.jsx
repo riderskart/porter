@@ -186,13 +186,21 @@ const Header = () => {
         )}
         {user && user.length > 0 ? (
           user[1].driver === true ? (
+            <div>
+
             <ButtonWrapper
               onClick={() => {
                 navigate("/all-appointments");
               }}
             >
               all appointments
-            </ButtonWrapper>
+              </ButtonWrapper>
+              <ButtonWrapper onClick={() => {
+                 navigate(`/delivery-partner-profile/${user?.[0]?._id}`);
+              }}>
+                Profile
+              </ButtonWrapper>
+            </div>
           ) : (
             <div className="flex gap-4">
               <ButtonWrapper
