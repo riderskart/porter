@@ -56,32 +56,7 @@ const Home = () => {
   };
 
   return (
-    <div className="">
-      {/* <div>
-        <h1> All Notifications</h1>
-        <ul>
-          {notifications.map((notification, index) => (
-            <li key={index}>
-              <div>
-                <h1>{notification.title}</h1>
-                <h3>{notification.body}</h3>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div> */}
-      {/* <ButtonWrapper
-        onClick={(e) => {
-          e.preventDefault();
-          handleNotification();
-        }}
-      >
-        Send notification
-      </ButtonWrapper> */}
-      {/* <BrowserNotification title={"vivek's notification"} body={"hii pappa"} /> */}
-
-      {/* <ButtonWrapper onClick={NavigateProfile}>Profile</ButtonWrapper> */}
-
+    <div>
       <Booking_And_services />
       <FAQs />
     </div>

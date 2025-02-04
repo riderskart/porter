@@ -72,7 +72,7 @@ const Register = () => {
   };
 
   return (
-    <div className=" flex  justify-center w-full h-fit bg-color-standard ">
+    <div className=" flex  justify-center w-full h-fit ">
       <section className="Form_side border-1 rounded-lg m-5 shadow-lg p-2  laptop:h-[60vh] ">
         <h1 className="text-center m-10 text-4xl text-black">Register</h1>
 

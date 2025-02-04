@@ -112,7 +112,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="bg-color-secondary overflow-hidden font-Fredoka">
+    <div className="bg-[#D5D5D7] overflow-hidden font-Fredoka">
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />

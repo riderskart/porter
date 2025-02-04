@@ -8,7 +8,7 @@ const FAQs = () => {
   // UI for questions
   const Question_Answer = ({ item, index }) => {
     return (
-      <div className="my-10 border px-10 py-5 rounded-xl border-neutral-600 bg-primary">
+      <div className="my-10 hover:border border-[#949597] px-10 py-5 rounded-xl bg-primary">
         {isOpened === index ? (
           <button
             className="mx-5 w-full flex justify-between"
@@ -48,7 +48,7 @@ const FAQs = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center bg-color-standard">
+    <div className="flex flex-col justify-center items-center bg-[#D5D5D7]">
       {/* Heading */}
       <div className="Heading flex flex-col justify-center items-center">
         <h1 className="text-[3rem] font-semibold phone:text-[1.5rem] heading-text-gray font-Fredoka ">

@@ -90,7 +90,7 @@ const LogIn = () => {
   };
 
   return (
-    <div className=" shadow-lg laptop:flex justify-center items-center w-full h-full bg-color-standard py-20 gap-20">
+    <div className=" shadow-lg shadow-[#949597] laptop:flex justify-center items-center w-full h-full py-20 gap-20">
       <section className="LOGIN-IMG w-[40%] hidden lg-block ">
         {selectedForm === "Personal" ? (
           <img src={LogInImg} alt="" className="laptop:h-[60vh] phone:w-full" />
@@ -103,14 +103,15 @@ const LogIn = () => {
         )}
       </section>
 
-      <section className="Form_side bg-white border m-5 px-24 rounded-lg shadow-lg ">
+      <section className="Form_side bg-[#949597] border border-neutral-700 m-5 px-24 rounded-lg shadow-lg shadow-[#949597] ">
         <h1 className="text-center mt-2 mb-5 text-xl text-black font-bold font-serif heading-text-gray">
           Login
         </h1>
 
-        <div className="Radio-btn flex justify-evenly ">
+        <div className="Radio-btn flex justify-evenly  ">
           <div className="flex items-center justify-center gap-2 mx-5  ">
             <input
+              // className="text-white"
               type="radio"
               name="Form"
               id="Personal"
@@ -138,8 +139,10 @@ const LogIn = () => {
             onSubmit={handelSubmit}
             className="Form  flex flex-col justify-center items-center "
           >
-            <div className="Email w-72 m-2  ">
-              <Label>Email</Label>
+            <div className="text-white Email w-72 m-2  ">
+              <Label>
+                <h1 className="text-white">Email</h1>
+              </Label>
               <Input
                 type="email"
                 placeholder="joe@example.com"
@@ -148,7 +151,9 @@ const LogIn = () => {
               />
             </div>
             <div className="password relative w-72 m-2 ">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">
+                <h1 className="text-white">Password</h1>
+              </Label>
               <Input
                 type={`${showPassword}`}
                 name="password"
@@ -194,8 +199,8 @@ const LogIn = () => {
             className="Form  flex flex-col justify-center items-center "
           >
             <div className="Phone w-72 m-2">
-              <Label className="block mb-2 text-lg font-semibold w-fit text-black   font-Philosopher">
-                Phone
+              <Label className="block mb-2 text-lg font-semibold w-fit text-white   font-Philosopher">
+                <h1 className="text-white"> Phone</h1>
               </Label>
               <Input
                 type="number"
@@ -207,9 +212,9 @@ const LogIn = () => {
             <div className="password relative w-72 m-2">
               <Label
                 htmlFor="password"
-                className="block mb-2 text-lg font-semibold w-fit text-black  font-Philosopher "
+                className="block mb-2 text-lg font-semibold w-fit text-white font-Philosopher "
               >
-                Password
+                <h1 className="text-white">Password</h1>
               </Label>
               <Input
                 type={`${showPassword}`}
@@ -249,16 +254,19 @@ const LogIn = () => {
           </form>
         )}
 
-        <div className="Sign_UP_Options mb-3">
-          <h3 className="text-center text-black text-opacity-80 shadow rounded-xl p-2">
-            Don't have an account ?
-            <Link to={`/register`} className="text-red-400 hover:underline">
+        <div className="Sign_UP_Options my-5 ">
+          <h3 className="text-center text-black bg-white text-opacity-80 shadow rounded-xl p-2">
+            Don't have an account?
+            <Link
+              to={`/register`}
+              className="text-red-400 mx-2 hover:underline"
+            >
               Register
             </Link>
           </h3>
         </div>
-        <div className="Sign_UP_Options mb-3">
-          <h3 className="flex justify-center items-center text-center text-black text-opacity-80 shadow rounded-xl p-2">
+        <div className="Sign_UP_Options my-5">
+          <h3 className="flex bg-white justify-center items-center text-center text-black text-opacity-80 shadow rounded-xl p-2">
             To become delivery partner{" "}
             <span>
               <ChevronRight />

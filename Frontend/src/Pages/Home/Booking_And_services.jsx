@@ -19,34 +19,12 @@ const Booking_And_services = () => {
             className="hover:scale-105 transition duration-200 ease-in-out"
           />
         </div>
-        <h3 className="name text-center w-24 text-sm mt-2 para-text-gray">
+        <h3 className="name text-center w-24 text-sm mt-2 text-white">
           {field.name}
         </h3>
       </Link>
     );
   };
-
-  // const OurServicesCard = ({ field }) => {
-  //   return (
-  //     <div className="relative  h-40 w-96  rounded-xl bg-button px-5 ">
-  //       <div className="Name mt-7 text-black py-5">
-  //         <span className="rounded-r-full mt-5 font-Fredoka text-4xl text-white">
-  //           {field.name}
-  //         </span>
-  //       </div>
-
-  //       <div className="Description  text-xl p-2 font-Fredoka  heading-text-gray">
-  //         {field.description}
-  //       </div>
-  //       {/* <div className="absolute bottom-4 left-4 ">
-  //         <button className="text-black px-5 py-1 rounded-xl drop-shadow-lg hover:scale-105 hover:drop-shadow-xl transition duration-150 ease-in-out">
-  //           <MoveRight />
-  //         </button>
-  //       </div> */}
-  //     </div>
-  //   );
-  // };
-
   const OurServicesSlider = () => {
     const [offset, setOffset] = useState(0);
     const sliderSpeed = 3000;
@@ -91,7 +69,7 @@ const Booking_And_services = () => {
 
   const OurServicesCard = ({ field }) => {
     return (
-      <div className="relative h-52 w-96 rounded-xl bg-button px-5 ">
+      <div className="relative h-52 w-96 rounded-xl backdrop-blur-lg mb-10 drop-shadow-xl shadow-[#DF3F33] px-5 bg-[#949597]">
         <div className="Name mt-7 text-black py-5">
           <span className="rounded-r-full mt-5 font-Fredoka text-4xl text-white">
             {field.name}
@@ -111,15 +89,8 @@ const Booking_And_services = () => {
     console.log(current);
   };
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     nextSlide(current /87);
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, []);
-
   return (
-    <div className="BODY  flex flex-col justify-center items-center bg-color-standard select-none">
+    <div className="BODY  flex flex-col justify-center items-center bg-[#D5D5D7] select-none">
       {/* Bg Image and text */}
       <div className="BG-and-Text relative phone:h-[45vh] laptop:h-[60vh] tablet:h-[30vh] overflow-hidden">
         <img src={Bg} alt="" className="w-full" />
@@ -135,8 +106,7 @@ const Booking_And_services = () => {
       </div>
 
       {/* booking section */}
-      <div className="Booking-section relative -top-32 lg:mx-20 bg-white rounded-xl  drop-shadow-lg p-4 lg:p-0">
-        {/* <div className="Booking-section relative -top-32  phone:w-[90vw] phone:h-fit  laptop:w-[70vw] laptop:h-[40vh] bg-white rounded-xl  drop-shadow-lg "> */}
+      <div className="Booking-section relative -top-32 lg:mx-20 bg-[#949597] rounded-xl  drop-shadow-lg p-4 lg:p-0 text-black ">
         {/* City btn */}
         <div className=" City-btn w-full laptop:hidden ">
           <button
@@ -160,7 +130,7 @@ const Booking_And_services = () => {
 
         <div className="flex gap-5 laptop:hidden w-fit justify-center items-center">
           {/* <div className="laptop:hidden flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll"> */}
-          <div className="hidden lg-block flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll">
+          <div className="hidden lg-block flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll justify-start items-start">
             {VehicleData.map((field, index) => (
               <Vehicle key={index} field={field} />
             ))}
@@ -170,7 +140,7 @@ const Booking_And_services = () => {
           <div>
             <Link
               to={`/booking`}
-              className=" phone:w-32 h-32  tablet:w-36 p-2  flex flex-col justify-between bg-secondary-color rounded-2xl drop-shadow-lg hover:scale-110  hover:drop-shadow-2xl transition duration-200 ease-in-out"
+              className=" phone:w-32 h-32  tablet:w-36 p-2  flex flex-col justify-between bg-secondary-color rounded-2xl drop-shadow-lg hover:scale-110  hover:drop-shadow-2xl transition duration-200 ease-in-out bg-[#DF3F33]"
             >
               <span className="text-xl  heading-text-gray">Book a parcel </span>
               <span className=" heading-text-gray">
@@ -181,8 +151,8 @@ const Booking_And_services = () => {
         </div>
 
         {/* Vehicle */}
-        <div className="Vehicle phone:hidden laptop:flex">
-          <div className="flex w-full h-[100%] justify-center items-center py-16 gap-10 ">
+        <div className="Vehicle phone:hidden laptop:flex bg-[#949597] ">
+          <div className="flex w-full h-[100%] justify-center items-start py-16 gap-10 text-black ">
             {/* All vehicles */}
             {VehicleData.map((field, index) => (
               <Vehicle key={index} field={field} />
@@ -192,7 +162,7 @@ const Booking_And_services = () => {
             <div>
               <Link
                 to={`/booking`}
-                className=" h-32 w-32 p-2 my-3  flex flex-col justify-between bg-button rounded-2xl drop-shadow-lg hover:scale-110 hover:drop-shadow-2xl transition duration-200 ease-in-out"
+                className=" h-32 w-32 p-2 my-3  flex flex-col justify-between text-white rounded-2xl drop-shadow-lg hover:scale-110 hover:drop-shadow-2xl transition duration-200 ease-in-out bg-[#DF3F33]"
               >
                 <span className="text-2xl ">Book a parcel </span>
                 <span>
@@ -205,7 +175,7 @@ const Booking_And_services = () => {
       </div>
 
       {/* Our Services */}
-      <section className="Our-Services relative w-full h-fit mb-20 bg-primary">
+      <section className="Our-Services relative w-full h-fit mb-20 ">
         {/* Title */}
         <div className="Title  flex flex-col justify-center items-center">
           <span className="  h-14 font-serif font-bold text-[3rem]  heading-text-gray">
@@ -229,7 +199,7 @@ const Booking_And_services = () => {
         </div>
 
         {/* All services */}
-        <div className="All-Services bg-primary relative overflow-hidden phone:hidden tablet:flex flex justify-center items-center">
+        <div className="All-Services relative overflow-hidden phone:hidden tablet:flex flex justify-center items-center">
           <div className="w-[90%] flex justify-center items-center pr-96">
             <OurServicesSlider />
           </div>

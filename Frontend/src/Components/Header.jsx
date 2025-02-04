@@ -32,7 +32,7 @@ const Header = () => {
       <div
         ref={modelRef}
         onClick={closeModel}
-        className="fixed inset-0 flex  w-[50vw] h-60 z-50  bg-white backdrop-blur-3xl rounded-r-xl overflow-hidden font-Fredoka  "
+        className="fixed inset-0 flex  w-[50vw] h-60 z-5 bg-[#D5D5D7] backdrop-blur-3xl rounded-r-xl overflow-hidden font-Fredoka  "
       >
         <div className="flex flex-col  w-full  ">
           <div className="h-248 flex justify-between p-6 gap-2">
@@ -95,7 +95,7 @@ const Header = () => {
   };
 
   return (
-    <div className="bg-color-standard Header flex laptop:justify-around items-center sticky top-0 bg-primary z-50 drop-shadow-xl h-20 font-Fredoka ">
+    <div className="bg-[#D5D5D7] Header flex laptop:justify-around items-center sticky top-0 bg-primary z-50 drop-shadow-xl h-20 font-Fredoka ">
       {/* Hamburger for phone and tab view */}
       <div className="Hamburger ml-2 laptop:hidden">
         <button
@@ -187,17 +187,18 @@ const Header = () => {
         {user && user.length > 0 ? (
           user[1].driver === true ? (
             <div>
-
-            <ButtonWrapper
-              onClick={() => {
-                navigate("/all-appointments");
-              }}
-            >
-              all appointments
+              <ButtonWrapper
+                onClick={() => {
+                  navigate("/all-appointments");
+                }}
+              >
+                all appointments
               </ButtonWrapper>
-              <ButtonWrapper onClick={() => {
-                 navigate(`/delivery-partner-profile/${user?.[0]?._id}`);
-              }}>
+              <ButtonWrapper
+                onClick={() => {
+                  navigate(`/delivery-partner-profile/${user?.[0]?._id}`);
+                }}
+              >
                 Profile
               </ButtonWrapper>
             </div>
