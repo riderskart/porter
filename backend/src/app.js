@@ -8,7 +8,6 @@ import { Server as SocketIOServer } from "socket.io";
 const allowedOrigins = [
   process.env.ORIGIN_1,
   process.env.ORIGIN_2,
-  process.env.ORIGIN_3,
 ];
 
 const app = express();
