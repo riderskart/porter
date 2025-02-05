@@ -6,13 +6,14 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { alertError, alertSuccess } from "../../../utility/Alert";
 import { useDispatch, useSelector } from "react-redux";
-import { DomainUrl, FetchData } from "../../../utility/fetchFromAPI";
+import { FetchData } from "../../../utility/fetchFromAPI";
 import { addUser, clearUser } from "../../../utility/Slice/UserInfoSlice";
 import { parseErrorMessage } from "../../../utility/ErrorMessageParser";
 import io from "socket.io-client";
 import { addAllAppointment } from "../../../utility/Slice/AllAppointmentsSlice";
 
-const socket = io(DomainUrl);
+
+const socket = io(process.env.DomainUrl);
 export default function DeliveryPartnerHome() {
   const Navigate = useNavigate();
   const Dispatch = useDispatch();

@@ -6,11 +6,21 @@ import http from "http";
 import { Server as SocketIOServer } from "socket.io";
 // import webPush from "web-push";
 
+const allowedOrigins = [
+  process.env.ORIGIN_1,
+];
+
 const app = express();
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
   cors: {
-    origin: process.env.ORIGIN, // Allow only this origin
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    }, // Allow only this origin
     credentials: true, // Allow credentials (cookies, headers)
   },
 });
@@ -22,7 +32,13 @@ const imagekit = new ImageKit({
 });
 
 const corsOptions = {
-  origin: process.env.ORIGIN, // Allow only this origin
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }, // Allow only this origin
   credentials: true, // Allow credentials (cookies, headers)
   methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed methods
   allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers

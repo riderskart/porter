@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import ButtonWrapper from "../../Components/Buttons";
 import { ChevronDown, ChevronRight, Eye, EyeOff } from "lucide-react";
-import { DomainUrl, FetchData } from "../../utility/fetchFromAPI";
+import { FetchData } from "../../utility/fetchFromAPI";
 import { useDispatch } from "react-redux";
 import { alertError, alertSuccess } from "../../utility/Alert";
 import { parseErrorMessage } from "../../utility/ErrorMessageParser";
@@ -13,7 +13,7 @@ import LogInImg from "../../assets/Home/LogIn1.jpeg";
 import LoginDriverImg from "../../assets/Home/LoginDriverImg.jpg";
 import Input from "../../Components/Input";
 
-const socket = io(DomainUrl);
+const socket = io(process.env.DomainUrl);
 
 const LogIn = () => {
   // Utility variables

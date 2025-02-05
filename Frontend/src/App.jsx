@@ -111,6 +111,8 @@ const App = () => {
     reLogin();
   }, []);
 
+  
+
   return (
     <div className="bg-[#D5D5D7] overflow-hidden font-Fredoka">
       <Header />
