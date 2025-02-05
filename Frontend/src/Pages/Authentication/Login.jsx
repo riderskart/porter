@@ -21,7 +21,7 @@ import LoginDriverImg from "../../assets/Home/LoginDriverImg.jpg";
 import Input from "../../Components/Input";
 import { Check } from "lucide-react";
 
-const socket = io(DomainUrl);
+const socket = io(process.env.DomainUrl);
 
 const LogIn = () => {
   // Utility variables
