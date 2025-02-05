@@ -1,7 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import ButtonWrapper from "../../Components/Buttons";
-import { ChevronDown, ChevronRight, Eye, EyeOff } from "lucide-react";
+import {
+  Bike,
+  ChevronDown,
+  ChevronRight,
+  Eye,
+  EyeOff,
+  User,
+} from "lucide-react";
 import { DomainUrl, FetchData } from "../../utility/fetchFromAPI";
 import { useDispatch } from "react-redux";
 import { alertError, alertSuccess } from "../../utility/Alert";
@@ -12,6 +19,7 @@ import io from "socket.io-client";
 import LogInImg from "../../assets/Home/LogIn1.jpeg";
 import LoginDriverImg from "../../assets/Home/LoginDriverImg.jpg";
 import Input from "../../Components/Input";
+import { Check } from "lucide-react";
 
 const socket = io(DomainUrl);
 
@@ -22,6 +30,7 @@ const LogIn = () => {
   const [showPassword, setShowPassword] = useState("password");
   const navigate = useNavigate();
   const Dispatch = useDispatch();
+  const [selected, setSelected] = useState("Personal");
 
   // All function
 
@@ -103,12 +112,68 @@ const LogIn = () => {
         )}
       </section>
 
-      <section className="Form_side bg-[#949597] border border-neutral-700 m-5 px-24 rounded-lg shadow-lg shadow-[#949597] ">
+      <section className="Form_side bg-[#949597] m-5 px-24 rounded-lg shadow-lg shadow-[#949597] py-10 ">
         <h1 className="text-center mt-2 mb-5 text-xl text-black font-bold font-serif heading-text-gray">
           Login
         </h1>
 
-        <div className="Radio-btn flex justify-evenly  ">
+        <div className="flex justify-evenly">
+          {/* Personal Option */}
+          <div
+            className={`flex items-center justify-center gap-2 mx-5 px-6 py-3 rounded-lg cursor-pointer 
+        ${
+          selected === "Personal"
+            ? "bg-[#DF3F33] text-white border-[#DF3F33]"
+            : "border-[#D5D5D7] text-black"
+        } border-2`}
+            onClick={() => setSelected("Personal")}
+          >
+            <input
+              type="radio"
+              name="Form"
+              id="Personal"
+              value="Personal"
+              checked={selected === "Personal"}
+              onChange={handleRadioChange}
+              className="hidden"
+            />
+            {selected === "Personal" && <Check size={20} />}
+            <label htmlFor="Personal" className="cursor-pointer">
+              <h1 className="flex justify-center items-center gap-2">
+                <User /> Personal
+              </h1>
+            </label>
+          </div>
+
+          {/* Delivery Partner Option */}
+          <div
+            className={`flex items-center justify-center gap-2 mx-5 px-6 py-3 rounded-lg cursor-pointer 
+        ${
+          selected === "DeliveryPartner"
+            ? "bg-[#DF3F33] text-white border-[#DF3F33]"
+            : "border-[#D5D5D7] text-black"
+        } border-2`}
+            onClick={() => setSelected("DeliveryPartner")}
+          >
+            <input
+              type="radio"
+              name="Form"
+              id="DeliveryPartner"
+              value="DeliveryPartner"
+              checked={selected === "DeliveryPartner"}
+              onChange={handleRadioChange}
+              className="hidden"
+            />
+            {selected === "DeliveryPartner" && <Check size={20} />}
+            <label htmlFor="DeliveryPartner" className="cursor-pointer">
+              <h1 className="flex justify-center items-center gap-2">
+                <Bike /> Delivery Partner
+              </h1>
+            </label>
+          </div>
+        </div>
+
+        {/* <div className="Radio-btn flex justify-evenly  ">
           <div className="flex items-center justify-center gap-2 mx-5  ">
             <input
               // className="text-white"
@@ -131,7 +196,7 @@ const LogIn = () => {
             />
             <Label htmlFor="DeliveryPartner">Delivery Partner</Label>
           </div>
-        </div>
+        </div> */}
 
         {selectedForm === "Personal" && (
           <form
