@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "./Components/Header";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home/Home.index";
@@ -21,11 +21,17 @@ import { useDispatch } from "react-redux";
 import { addUser, clearUser } from "./utility/Slice/UserInfoSlice";
 import { addAllAppointment } from "./utility/Slice/AllAppointmentsSlice";
 import { parseErrorMessage } from "./utility/ErrorMessageParser";
-import { alertError } from "./utility/Alert";
+import { alertError, alertSuccess } from "./utility/Alert";
+import { io } from "socket.io-client";
+
+const socketUrl = process.env.DomainUrl;
+console.log(socketUrl);
 
 const App = () => {
-  const Dispatch = useDispatch();
+  const socketRef = useRef(null);
 
+  const Dispatch = useDispatch();
+  const [notifications, setNotifications] = useState([]);
   // Re-logging in after refreshing the page
   useEffect(() => {
     async function reLogin() {
@@ -111,7 +117,38 @@ const App = () => {
     reLogin();
   }, []);
 
-  
+  // Socket connection
+  useEffect(() => {
+    if (!socketRef.current) {
+      socketRef.current = io(socketUrl, { transports: ["websocket"] });
+
+      socketRef.current.on("newOrder", (notification) => {
+        console.log("New order received:", notification);
+        setNotifications((prev) => [...prev, notification]);
+      });
+
+      socketRef.current.on("connect", () => {
+        console.log("Connected with socket ID:", socketRef.current.id);
+      });
+
+      socketRef.current.on("disconnect", () => {
+        console.log("Disconnected from socket");
+      });
+    }
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (notifications.length > 0) {
+      alertSuccess(notifications[notifications.length - 1]?.title);
+    }
+  }, [notifications]);
 
   return (
     <div className="bg-[#D5D5D7] overflow-hidden font-Fredoka">
