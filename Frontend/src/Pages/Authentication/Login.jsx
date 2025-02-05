@@ -9,7 +9,7 @@ import {
   EyeOff,
   User,
 } from "lucide-react";
-import { DomainUrl, FetchData } from "../../utility/fetchFromAPI";
+import { FetchData } from "../../utility/fetchFromAPI";
 import { useDispatch } from "react-redux";
 import { alertError, alertSuccess } from "../../utility/Alert";
 import { parseErrorMessage } from "../../utility/ErrorMessageParser";
@@ -117,7 +117,7 @@ const LogIn = () => {
           Login
         </h1>
 
-        <div className="flex justify-evenly">
+        <div className="flex justify-evenly flex-col laptop:flex-row gap-5">
           {/* Personal Option */}
           <div
             className={`flex items-center justify-center gap-2 mx-5 px-6 py-3 rounded-lg cursor-pointer 
@@ -172,31 +172,6 @@ const LogIn = () => {
             </label>
           </div>
         </div>
-
-        {/* <div className="Radio-btn flex justify-evenly  ">
-          <div className="flex items-center justify-center gap-2 mx-5  ">
-            <input
-              // className="text-white"
-              type="radio"
-              name="Form"
-              id="Personal"
-              value="Personal"
-              onChange={handleRadioChange}
-              defaultChecked
-            />
-            <Label htmlFor="Personal">Personal</Label>
-          </div>
-          <div className="flex justify-center items-center gap-2 mx-5 ">
-            <input
-              type="radio"
-              name="Form"
-              id="DeliveryPartner"
-              value="DeliveryPartner"
-              onChange={handleRadioChange}
-            />
-            <Label htmlFor="DeliveryPartner">Delivery Partner</Label>
-          </div>
-        </div> */}
 
         {selectedForm === "Personal" && (
           <form

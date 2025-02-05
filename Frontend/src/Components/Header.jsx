@@ -47,6 +47,9 @@ const Header = () => {
           </div>
 
           <section className="menu-section flex flex-col font-Fredoka">
+            <Link className="ml-2" to={"/"}>
+              Home
+            </Link>
             <Link to={"/"} onClick={onClose} className=" font-Exo my-1 mx-2  ">
               For Enterprise/ Personal
             </Link>
@@ -158,9 +161,13 @@ const Header = () => {
       )}
 
       <div className="support hidden laptop:flex laptop:justify-center items-center gap-5">
-        <Link className="font-sans" to={`#`}>
-          Support
-        </Link>
+        <ButtonWrapper
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Home
+        </ButtonWrapper>
 
         {user && user.length > 0 ? (
           <div>
@@ -223,6 +230,9 @@ const Header = () => {
             </div>
           )
         ) : null}
+        <Link className="font-sans" to={`#`}>
+          Support
+        </Link>
       </div>
     </div>
   );
