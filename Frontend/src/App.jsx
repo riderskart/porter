@@ -118,7 +118,7 @@ const App = () => {
   // Socket connection
   useEffect(() => {
     if (!socketRef.current) {
-      socketRef.current = io(process.env.DomainUrl, {
+      socketRef.current = io("https://riders-kart.onrender.com", {
         withCredentials: true, // ✅ Ensures cross-origin cookies and headers work
         transports: ["websocket"], // ✅ Forces WebSocket instead of polling (better for performance)
       });
