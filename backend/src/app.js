@@ -6,6 +6,7 @@ import http from "http";
 import { Server as SocketIOServer } from "socket.io";
 
 const allowedOrigins = [process.env.ORIGIN_1, process.env.ORIGIN_2];
+console.log("Allowed Origins: ", allowedOrigins);
 
 const app = express();
 
@@ -13,7 +14,13 @@ const app = express();
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   },
 });
@@ -27,13 +34,20 @@ const imagekit = new ImageKit({
 
 // ** CORS Configuration **
 const corsOptions = {
-  origin: allowedOrigins,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // ✅ Explicitly handle preflight requests
+// app.use(cors(corsOptions));
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
