@@ -24,12 +24,10 @@ import { parseErrorMessage } from "./utility/ErrorMessageParser";
 import { alertError, alertSuccess } from "./utility/Alert";
 import { io } from "socket.io-client";
 
-const socketUrl = process.env.DomainUrl;
-console.log(socketUrl);
 
 const App = () => {
   const socketRef = useRef(null);
-
+  console.log(process.env.DomainUrl);
   const Dispatch = useDispatch();
   const [notifications, setNotifications] = useState([]);
   // Re-logging in after refreshing the page
@@ -120,7 +118,10 @@ const App = () => {
   // Socket connection
   useEffect(() => {
     if (!socketRef.current) {
-      socketRef.current = io(socketUrl, { transports: ["websocket"] });
+      socketRef.current = io(process.env.DomainUrl, {
+        withCredentials: true, // ✅ Ensures cross-origin cookies and headers work
+        transports: ["websocket"], // ✅ Forces WebSocket instead of polling (better for performance)
+      });
 
       socketRef.current.on("newOrder", (notification) => {
         console.log("New order received:", notification);
