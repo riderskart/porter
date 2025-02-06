@@ -5,10 +5,7 @@ import ImageKit from "imagekit";
 import http from "http";
 import { Server as SocketIOServer } from "socket.io";
 
-const allowedOrigins = [
-  process.env.ORIGIN_1,
-  process.env.ORIGIN_2,
-];
+const allowedOrigins = [process.env.ORIGIN_1, process.env.ORIGIN_2];
 
 const app = express();
 
@@ -63,6 +60,12 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${socket.id}`);
   });
+});
+
+app.use((req, res, next) => {
+  console.log("Request Body: ", req.body);
+  console.log("Request Params: ", req.params);
+  next();
 });
 
 // ** Route for Authenticating ImageKit **
