@@ -10,7 +10,6 @@ const allowedOrigins = [
   process.env.ORIGIN_2,
   process.env.ORIGIN_3,
 ];
-console.log("Allowed Origins: ", allowedOrigins);
 
 const app = express();
 
