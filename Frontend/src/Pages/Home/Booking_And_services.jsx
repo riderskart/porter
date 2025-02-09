@@ -3,7 +3,7 @@ import Bg from "../../assets/Bg.svg";
 import { ChevronDown, CornerDownRight, MapPin, MoveRight } from "lucide-react";
 import { OurServices, VehicleData } from "../../Constants/homeConstants";
 import { Link } from "react-router-dom";
-import HomeBackGround from "../../assets/Home/HomeBackGround.jpg";
+import HomeBackGround from "../../assets/Home/HomeBackground.jpg";
 import ButtonWrapper from "../../Components/Buttons";
 
 const Booking_And_services = () => {
