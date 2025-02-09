@@ -6,22 +6,27 @@ import logo from "../assets/Logo.png";
 import scooty from "../assets/Home/scooty.png";
 import pickup from "../assets/Home/pickup.png";
 
+import Bike from "../assets/Home/EBikeImage.png"
+import EComImage from "../assets/Home/EcomImage.png"
+import EShiftingImage from "../assets/Home/EShiftingImage.jpeg"
+import ETruck from "../assets/Home/ETruckImage.jpeg"
+
 export const VehicleData = [
   {
     name: "Two Wheelers",
-    icon: two_wheeler,
+    icon: Bike,
   },
   {
     name: "Pickups",
-    icon: truck,
+    icon: ETruck,
   },
   {
     name: "Affordable House sifting",
-    icon: sofa,
+    icon: EShiftingImage,
   },
   {
-    name: "Intercity Parcels",
-    icon: India,
+    name: "E Commerce Services",
+    icon: EComImage,
   },
 ];
 
@@ -62,8 +67,8 @@ export const OurServices = [
     description: "Integration of our APIs is available to developers",
   },
   {
-    name: "E Commerce Services",
-    description: "Need to Shop for goods we offer the Solution",
+    name: "E Comm. Services",
+    description: "We also offer Shopping Platform",
   },
   {
     name: "Insurance Services",
