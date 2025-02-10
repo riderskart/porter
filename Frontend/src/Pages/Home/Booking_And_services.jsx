@@ -13,15 +13,15 @@ const Booking_And_services = () => {
   // UI for Vehicle icon
   const Vehicle = ({ field }) => {
     return (
-      <Link to={`#`} className="flex flex-col justify-center items-center m-2">
-        <div className="Img w-28 bg-primary rounded-lg overflow-hidden drop-shadow-lg hover:drop-shadow-xl">
+      <Link to={`/booking`} className="flex flex-col justify-center items-center m-2">
+        <div className="Img w-28 bg-primary rounded-lg overflow-hidden drop-shadow-lg hover:drop-shadow-xl p-2">
           <img
             src={field?.icon}
             alt=""
-            className="hover:scale-105 transition duration-200 ease-in-out"
+            className="hover:scale-105 transition duration-200 ease-in-out rounded-lg"
           />
         </div>
-        <h3 className="name text-center w-24 text-sm mt-2 text-white">
+        <h3 className="name text-center w-24 text-sm mt-2 ">
           {field.name}
         </h3>
       </Link>
@@ -97,44 +97,137 @@ const Booking_And_services = () => {
     index++;
     console.log(current);
   };
-  const PopupButton = () => {
-    const [isOpen, setIsOpen] = useState(false);
+  // const PopupButton = () => {
+  //   const [isOpen, setIsOpen] = useState(false);
 
-    const openPopup = () => setIsOpen(true);
-    const closePopup = () => setIsOpen(false);
+  //   const openPopup = () => setIsOpen(true);
+  //   const closePopup = () => setIsOpen(false);
 
-    return (
-      <div className="flex flex-col gap-16 justify-center items-center h-screen bg-transparent">
-        <h1 className="flex flex-col justify-center gap-5 ">
-          <span className="text-8xl font-Knewave ">Rider's Kart</span>
-          <span className=" text-lg flex flex-col gap-10 justify-center items-center subtitle-text-gray">
-            Get your things on point
-            <span>
-              <ChevronDown className="animate-bounce " />
-            </span>
-          </span>
-        </h1>
-        <button
-          onClick={openPopup}
-          className="px-4 py-2 rounded-2xl drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out bg-[#DF3F33] text-white"
-        >
-          Book Here
-        </button>
+  //   return (
+  //     <div className="flex flex-col gap-16 justify-center items-center h-screen bg-transparent">
+  //       <h1 className="flex flex-col justify-center gap-5 ">
+  //         <span className="text-8xl font-Knewave ">Rider's Kart</span>
+  //         <span className=" text-lg flex flex-col gap-10 justify-center items-center subtitle-text-gray">
+  //           Get your things on point
+  //           <span>
+  //             <ChevronDown className="animate-bounce " />
+  //           </span>
+  //         </span>
+  //       </h1>
+  //       <button
+  //         onClick={openPopup}
+  //         className="px-4 py-2 rounded-2xl drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out bg-[#DF3F33] text-white"
+  //       >
+  //         Book Here
+  //       </button>
 
-        {/* Popup Modal */}
-        {isOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md flex justify-center items-center z-50">
-            <div className=" rounded-lg p-8 w-fit text-center">
-              <button
-                onClick={closePopup}
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-              >
-                &times;
-              </button>
-              {/* booking section with 4 bubas */}
-              <div className=" z-10 w-full h-4/5 text-center top-0 heading-text-gray flex flex-col laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10 ">
+  //       {/* Popup Modal */}
+  //       {isOpen && (
+  //         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md flex justify-center items-center z-50">
+  //           <div className=" rounded-lg p-8 w-fit text-center">
+  //             <button
+  //               onClick={closePopup}
+  //               className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+  //             >
+  //               &times;
+  //             </button>
+  //             {/* booking section with 4 bubas */}
+  //             <div className=" z-10 w-full h-4/5 text-center top-0 heading-text-gray flex flex-col laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10 ">
+  //               {/* booking section */}
+  //               <div className="Booking-section relative lg:mx-20 bg-[#949597] rounded-xl  drop-shadow-lg p-4 lg:p-0 text-black ">
+  //                 {/* City btn */}
+  //                 <div className=" City-btn w-full laptop:hidden ">
+  //                   <button
+  //                     className="flex mx-5 mt-3"
+  //                     onClick={() => {
+  //                       setCityMenu({
+  //                         isOpened: true,
+  //                         value: cityMenu.value,
+  //                       });
+  //                     }}
+  //                   >
+  //                     <span>
+  //                       <MapPin width={15} color="#93161a" />
+  //                     </span>
+  //                     <span className="ml-2 text-sm"> City:</span>{" "}
+  //                     <span className="font-bold mx-2 text-sm heading-text-gray">
+  //                       Ranchi
+  //                     </span>
+  //                   </button>
+  //                 </div>
+
+  //                 <div className="flex gap-5 laptop:hidden w-fit justify-center items-center">
+  //                   {/* <div className="laptop:hidden flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll"> */}
+  //                   <div className="hidden lg-block flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll justify-start items-start">
+  //                     {VehicleData.map((field, index) => (
+  //                       <Vehicle key={index} field={field} />
+  //                     ))}
+  //                   </div>
+
+  //                   {/* Estimation Btn */}
+  //                   <div>
+  //                     <Link
+  //                       to={`/booking`}
+  //                       className=" phone:w-32 h-32  tablet:w-36 p-2  flex flex-col justify-between bg-secondary-color rounded-2xl drop-shadow-lg hover:scale-110  hover:drop-shadow-2xl transition duration-200 ease-in-out bg-[#DF3F33]"
+  //                     >
+  //                       <span className="text-xl  heading-text-gray">
+  //                         Book a parcel{" "}
+  //                       </span>
+  //                       <span className=" heading-text-gray">
+  //                         <CornerDownRight />
+  //                       </span>
+  //                     </Link>
+  //                   </div>
+  //                 </div>
+
+  //                 {/* Vehicle */}
+  //                 <div className="Vehicle phone:hidden laptop:flex bg-[#949597] ">
+  //                   <div className="flex w-full h-[100%] justify-center items-start py-16 gap-10 text-black ">
+  //                     {/* All vehicles */}
+  //                     {VehicleData.map((field, index) => (
+  //                       <Vehicle key={index} field={field} />
+  //                     ))}
+
+  //                     {/* Estimation Btn */}
+  //                     <div>
+  //                       <Link
+  //                         to={`/booking`}
+  //                         className=" h-32 w-32 p-2 my-3  flex flex-col justify-between text-white rounded-2xl drop-shadow-lg hover:scale-110 hover:drop-shadow-2xl transition duration-200 ease-in-out bg-[#DF3F33]"
+  //                       >
+  //                         <span className="text-2xl ">Book a parcel </span>
+  //                         <span>
+  //                           <CornerDownRight />
+  //                         </span>
+  //                       </Link>
+  //                     </div>
+  //                   </div>
+  //                 </div>
+  //               </div>
+  //             </div>
+
+  //             <button
+  //               onClick={closePopup}
+  //               className="mt-10 px-6 py-3 bg-[#D5D4D7] text-black rounded-lg font-semibold hover:bg-[#DF3F33] hover:text-white transition duration-300 ease-in-out"
+  //             >
+  //               Close
+  //             </button>
+  //           </div>
+  //         </div>
+  //       )}
+  //     </div>
+  //   );
+  // };
+
+  return (
+    <div className="BODY  flex flex-col justify-center items-center bg-[#D5D5D7] select-none">
+      {/* Bg Image and text */}
+      <div className="BG-and-Text relative phone:h-[45vh] laptop:h-[70vh] tablet:h-[30vh] overflow-hidden">
+        <img src={HomeBackGround} alt="" className="w-full" />
+        <div className="absolute z-10 w-full h-4/5 text-center top-0 heading-text-gray flex gap-10 laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10">
+          {/* <PopupButton /> */}
+          <div className=" z-10 w-full h-4/5 text-center top-0 heading-text-gray flex flex-col laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10  ">
                 {/* booking section */}
-                <div className="Booking-section relative lg:mx-20 bg-[#949597] rounded-xl  drop-shadow-lg p-4 lg:p-0 text-black ">
+                <div className="Booking-section relative lg:mx-20 bg-transparent rounded-xl  drop-shadow-lg p-4 lg:p-0 text-black backdrop-blur-sm shadow-neutral-600 shadow-2xl">
                   {/* City btn */}
                   <div className=" City-btn w-full laptop:hidden ">
                     <button
@@ -181,7 +274,7 @@ const Booking_And_services = () => {
                   </div>
 
                   {/* Vehicle */}
-                  <div className="Vehicle phone:hidden laptop:flex bg-[#949597] ">
+                  <div className="Vehicle phone:hidden laptop:flex px-5 rounded-xl ">
                     <div className="flex w-full h-[100%] justify-center items-start py-16 gap-10 text-black ">
                       {/* All vehicles */}
                       {VehicleData.map((field, index) => (
@@ -204,27 +297,6 @@ const Booking_And_services = () => {
                   </div>
                 </div>
               </div>
-
-              <button
-                onClick={closePopup}
-                className="mt-10 px-6 py-3 bg-[#D5D4D7] text-black rounded-lg font-semibold hover:bg-[#DF3F33] hover:text-white transition duration-300 ease-in-out"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  return (
-    <div className="BODY  flex flex-col justify-center items-center bg-[#D5D5D7] select-none">
-      {/* Bg Image and text */}
-      <div className="BG-and-Text relative phone:h-[45vh] laptop:h-[70vh] tablet:h-[30vh] overflow-hidden">
-        <img src={HomeBackGround} alt="" className="w-full" />
-        <div className="absolute z-10 w-full h-4/5 text-center top-0 heading-text-gray flex gap-10 laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10">
-          <PopupButton />
         </div>
       </div>
 

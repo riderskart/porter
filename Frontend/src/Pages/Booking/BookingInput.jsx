@@ -19,6 +19,7 @@ import { alertError, alertSuccess } from "../../utility/Alert";
 import { parseErrorMessage } from "../../utility/ErrorMessageParser";
 import { FetchData } from "../../utility/fetchFromAPI";
 import { useNavigate } from "react-router-dom";
+import BackgroundImage from "../../assets/Booking/BookingBackground.jpg";
 
 const formSections = [
   "Sender's Details",
@@ -645,30 +646,34 @@ export default function BookingInput() {
   }
 
   return (
-    <div className="phone:max-w-[90vw] laptop:max-w-[80vw] relative -top-20 mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <form ref={formRef} action="">
-        <AnimatePresence custom={direction} mode="wait">
-          <motion.div
-            key={currentSection}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ type: "tween", duration: 0.5 }}
-          >
-            {currentSection === 0 && <SenderDetails />}
-            {currentSection === 1 && <ReceiverDetails />}
-            {currentSection === 2 && <ProductDetails />}
-            {currentSection === 3 && <EstimationDetails />}
-            {currentSection === 4 && <ReviewPage />}
-          </motion.div>
-        </AnimatePresence>
-      </form>
+    <div className=" w-full ">
+      <div className="relative h-[40vh] bg-red-400 overflow-hidden">
+        <img src={BackgroundImage} className=" w-full " />
+      </div>
+      <div className=" phone:max-w-[90vw] laptop:max-w-[80vw] absolute bottom-20 mx-40 p-6 backdrop-blur-2xl rounded-lg shadow-lg">
+        <form ref={formRef} action="">
+          <AnimatePresence custom={direction} mode="wait">
+            <motion.div
+              key={currentSection}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ type: "tween", duration: 0.5 }}
+            >
+              {currentSection === 0 && <SenderDetails />}
+              {currentSection === 1 && <ReceiverDetails />}
+              {currentSection === 2 && <ProductDetails />}
+              {currentSection === 3 && <EstimationDetails />}
+              {currentSection === 4 && <ReviewPage />}
+            </motion.div>
+          </AnimatePresence>
+        </form>
 
-      {/* previous and next btn  */}
-      <div className="mt-6 flex justify-between">
-        {/* <ButtonWrapper
+        {/* previous and next btn  */}
+        <div className="mt-6 flex justify-between">
+          {/* <ButtonWrapper
           onClick={prevSection}
           // disabled={currentSection === 0}
           // variant="outline"
@@ -679,33 +684,34 @@ export default function BookingInput() {
           </div>
         </ButtonWrapper> */}
 
-        {currentSection === 4 ? (
-          <ButtonWrapper
-            onClick={async (e) => {
-              e.preventDefault();
-              await nextSection(currentSection);
-              HandelSubmit();
-            }}
-            // disabled={currentSection === formSections.length - 1}
-          >
-            <div className="flex justify-center items-center">
-              Book Shipment
-              <ChevronRight className="w-4 h-4 ml-2" />
-            </div>
-          </ButtonWrapper>
-        ) : (
-          <ButtonWrapper
-            onClick={() => {
-              nextSection(currentSection);
-            }}
-            // disabled={currentSection === formSections.length - 1}
-          >
-            <div className="flex justify-center items-center">
-              save & Next
-              <ChevronRight className="w-4 h-4 ml-2" />
-            </div>
-          </ButtonWrapper>
-        )}
+          {currentSection === 4 ? (
+            <ButtonWrapper
+              onClick={async (e) => {
+                e.preventDefault();
+                await nextSection(currentSection);
+                HandelSubmit();
+              }}
+              // disabled={currentSection === formSections.length - 1}
+            >
+              <div className="flex justify-center items-center">
+                Book Shipment
+                <ChevronRight className="w-4 h-4 ml-2" />
+              </div>
+            </ButtonWrapper>
+          ) : (
+            <ButtonWrapper
+              onClick={() => {
+                nextSection(currentSection);
+              }}
+              // disabled={currentSection === formSections.length - 1}
+            >
+              <div className="flex justify-center items-center">
+                save & Next
+                <ChevronRight className="w-4 h-4 ml-2" />
+              </div>
+            </ButtonWrapper>
+          )}
+        </div>
       </div>
     </div>
   );
