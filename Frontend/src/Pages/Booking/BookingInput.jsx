@@ -281,29 +281,50 @@ export default function BookingInput() {
           <h2 className="text-2xl font-bold">{formSections[currentSection]}</h2>
         </div>
 
-        <div className="grid laptop:grid-cols-2 phone:grid-cols-1 tablet:grid-cols-2 gap-4">
+        <div className="grid phone:grid-cols-1 tablet:grid-cols-2 gap-4 laptop:flex laptop:justify-evenly laptop:items-start">
           {/* Vehicle Type */}
           <div>
-            <Label htmlFor="vehicleType">Vehicle Type</Label>
-            <select
-              name="TypeOfVehicle"
-              id="vehicleType"
-              className="border-gray-900/30 border txt-light-brown text-sm rounded-lg block w-5/6 p-2.5 dark:placeholder-gray-900 dark:text-black drop-shadow-xl focus:outline-none flex justify-center items-center"
-              value={vehicleType} // Bind to state
-              onChange={(e) => setVehicleType(e.target.value)} // Update state on change
-            >
-              <option value="" disabled hidden>
-                Select an Option
-              </option>
-              <option value="Bike">Bike</option>
-              <option value="Scooty">Scooty</option>
-              <option value="Pickup">Pickup</option>
-              <option value="Truck">Truck</option>
-            </select>
+            <div>
+              <Label htmlFor="vehicleType">Vehicle Type</Label>
+              <select
+                name="TypeOfVehicle"
+                id="vehicleType"
+                className="border-gray-900/30 border txt-light-brown text-sm rounded-lg block phone:w-5/6 p-2.5 dark:placeholder-gray-900 dark:text-black drop-shadow-xl focus:outline-none flex justify-center items-center laptop:w-40 laptop:mt-5"
+                value={vehicleType} // Bind to state
+                onChange={(e) => setVehicleType(e.target.value)} // Update state on change
+              >
+                <option value="" disabled hidden>
+                  Select an Option
+                </option>
+                <option value="Bike">Bike</option>
+                <option value="Scooty">Scooty</option>
+                <option value="Pickup">Pickup</option>
+                <option value="Truck">Truck</option>
+              </select>
+            </div>
+            <div className="laptop:block phone:hidden mt-10">
+              <Label htmlFor="productType">Product Type</Label>
+              <select
+                name="productType"
+                id="productType"
+                className="border-gray-900/30 border txt-light-brown text-sm rounded-lg block phone:w-5/6 p-2.5 dark:placeholder-gray-900 dark:text-black drop-shadow-xl focus:outline-none flex justify-center items-center laptop:w-40 laptop:mt-5"
+                defaultValue="none"
+              >
+                <option value="none" disabled hidden>
+                  Select an Option
+                </option>
+                <option value="Document">Document</option>
+                <option value="Hardware">Hardware</option>
+                <option value="Books & Stationary">Books & Stationary</option>
+                <option value="Personal Item">Personal Item</option>
+                <option value="Clothes">Clothes</option>
+                <option value="Household Items">Household Items</option>
+              </select>
+            </div>
           </div>
 
           {/* Product type */}
-          <div>
+          <div className="laptop:hidden phone:block">
             <Label htmlFor="productType">Product Type</Label>
             <select
               name="productType"
@@ -488,14 +509,14 @@ export default function BookingInput() {
 
   function ReviewPage() {
     return (
-      <div>
+      <div className="laptop:flex phone:flex phone:flex-col laptop:flex-row">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold">{formSections[currentSection]}</h2>
         </div>
-        <div>
-          <section className="Shipment-details flex  border-b-2 pb-2">
-            <div className="Sender  w-1/2 h-fit p-4 flex justify-between border-r-2  ">
-              {/* Name, number and address */}
+        <div className="flex laptop:flex-row phone:flex-col">
+          <section className="Shipment-details flex  border-b-2 pb-2 flex-col mr-40 ">
+            {/* Name, number and address */}
+            <div className="Sender  w-full h-fit p-4 flex  justify-between border-r-2  ">
               <div className=" w-[90%] h-fit ">
                 <div className="flex gap-2">
                   <h2 className="text-lg font-serif">{sender?.senderName}</h2>
@@ -508,17 +529,11 @@ export default function BookingInput() {
                   </span>
                 </div>
               </div>
-              {/* Edit btn */}
-              <div>
-                <button className="heading-text-gray hover:underline transition duration-300 ease-in-out">
-                  Edit
-                </button>
-              </div>
             </div>
-            <div className="Reciever  w-1/2 h-fit p-4 flex justify-between  ">
+            <div className="Reciever  w-full h-fit p-4 flex justify-between  ">
               {/* Name, number and address */}
               <div className=" w-[90%] h-fit ">
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-row">
                   <h2>{receiver?.receiverName}</h2>
                   <span className="text-gray-400">
                     {receiver?.receiverAddress}
@@ -534,44 +549,44 @@ export default function BookingInput() {
                 </div>
               </div>
               {/* Edit btn */}
-              <div>
+              {/* <div>
                 <button className="heading-text-gray hover:underline transition duration-300 ease-in-out">
                   Edit
                 </button>
-              </div>
+              </div> */}
             </div>
           </section>
-          <section className="Item-Details flex justify-between mt-5 border-b-2 pb-2">
+          <section className="Item-Details flex justify-between mt-5 border-b-2 pb-2 mr-40">
             {/* Details */}
-            <div>
-              <div className="flex gap-2">
-                <h3 className="text-lg font-serif">
-                  {itemDetails.productType} •
+            <div className="flex flex-col">
+              <div className="flex flex-col gap-2">
+                <h3 className="text-lg ">
+                  Type of Parcel: {itemDetails.productType} 
                 </h3>
-                <h3>weight: {itemDetails.productWeight}</h3>
+                <h3>weight: {itemDetails.productWeight} kg</h3>
               </div>
-              <div className="flex gap-2">
-                <h3 className="text-lg font-serif">
+              <div className="flex flex-col gap-2">
+                <h3 className="text-lg ">
                   volume:{" "}
                   <span className="font-exo font-bold">
                     {itemDetails.length *
                       itemDetails.width *
                       itemDetails.height}{" "}
                   </span>
-                  <span className="text-sm font-Exo"> cubic cm </span>•
+                  <span className="text-sm font-Exo"> cubic cm </span>
                 </h3>
                 <h3>worth: {itemDetails.productValue}</h3>
               </div>
             </div>
             {/* Edit btn */}
-            <div>
+            {/* <div>
               <button className="heading-text-gray hover:underline transition duration-300 ease-in-out">
                 Edit
               </button>
-            </div>
+            </div> */}
           </section>
           <section className="Date-and-payment-details  mt-5 border-b-2 pb-2">
-            <h2>Assigned Partner</h2>
+            <h2>Final checkout</h2>
             <div>
               {/* Shipment date, partner and price */}
               <div className="flex justify-between items-center px-4 py-2 rounded-lg ">
@@ -646,71 +661,61 @@ export default function BookingInput() {
   }
 
   return (
-    <div className=" w-full ">
-      <div className="relative h-[40vh] bg-red-400 overflow-hidden">
+    <div className=" w-full phone:h-fit   ">
+      <div className="absolute h-[40vh] overflow-hidden phone:hidden laptop:block">
         <img src={BackgroundImage} className=" w-full " />
       </div>
-      <div className=" phone:max-w-[90vw] laptop:max-w-[80vw] absolute bottom-20 mx-40 p-6 backdrop-blur-2xl rounded-lg shadow-lg">
-        <form ref={formRef} action="">
-          <AnimatePresence custom={direction} mode="wait">
-            <motion.div
-              key={currentSection}
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ type: "tween", duration: 0.5 }}
-            >
-              {currentSection === 0 && <SenderDetails />}
-              {currentSection === 1 && <ReceiverDetails />}
-              {currentSection === 2 && <ProductDetails />}
-              {currentSection === 3 && <EstimationDetails />}
-              {currentSection === 4 && <ReviewPage />}
-            </motion.div>
-          </AnimatePresence>
-        </form>
+      <div className="laptop:h-80 relative w-full z-50">
+        <div className=" phone:max-w-[90vw] laptop:max-w-[80vw] laptop:absolute bottom-20 laptop:mx-40 phone:mx-20 p-6 backdrop-blur-2xl rounded-lg shadow-lg phone:h-fit phone:top-4 phone:mb-10 laptop:-top-40">
+          <form ref={formRef} action="">
+            <AnimatePresence custom={direction} mode="wait">
+              <motion.div
+                key={currentSection}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ type: "tween", duration: 0.5 }}
+              >
+                {currentSection === 0 && <SenderDetails />}
+                {currentSection === 1 && <ReceiverDetails />}
+                {currentSection === 2 && <ProductDetails />}
+                {currentSection === 3 && <ReviewPage />}
+              </motion.div>
+            </AnimatePresence>
+          </form>
 
-        {/* previous and next btn  */}
-        <div className="mt-6 flex justify-between">
-          {/* <ButtonWrapper
-          onClick={prevSection}
-          // disabled={currentSection === 0}
-          // variant="outline"
-        >
-          <div className="flex justify-center items-center">
-            <ChevronLeft className="w-4 h-4 mr-2" />
-            Previous
+          {/* previous and next btn  */}
+          <div className="mt-6 flex justify-between">
+            {currentSection === 3 ? (
+              <ButtonWrapper
+                onClick={async (e) => {
+                  e.preventDefault();
+                  await nextSection(currentSection);
+                  HandelSubmit();
+                }}
+                // disabled={currentSection === formSections.length - 1}
+              >
+                <div className="flex justify-center items-center">
+                  Book Shipment
+                  <ChevronRight className="w-4 h-4 ml-2" />
+                </div>
+              </ButtonWrapper>
+            ) : (
+              <ButtonWrapper
+                onClick={() => {
+                  nextSection(currentSection);
+                }}
+                // disabled={currentSection === formSections.length - 1}
+              >
+                <div className="flex justify-center items-center">
+                  save & Next
+                  <ChevronRight className="w-4 h-4 ml-2" />
+                </div>
+              </ButtonWrapper>
+            )}
           </div>
-        </ButtonWrapper> */}
-
-          {currentSection === 4 ? (
-            <ButtonWrapper
-              onClick={async (e) => {
-                e.preventDefault();
-                await nextSection(currentSection);
-                HandelSubmit();
-              }}
-              // disabled={currentSection === formSections.length - 1}
-            >
-              <div className="flex justify-center items-center">
-                Book Shipment
-                <ChevronRight className="w-4 h-4 ml-2" />
-              </div>
-            </ButtonWrapper>
-          ) : (
-            <ButtonWrapper
-              onClick={() => {
-                nextSection(currentSection);
-              }}
-              // disabled={currentSection === formSections.length - 1}
-            >
-              <div className="flex justify-center items-center">
-                save & Next
-                <ChevronRight className="w-4 h-4 ml-2" />
-              </div>
-            </ButtonWrapper>
-          )}
         </div>
       </div>
     </div>
