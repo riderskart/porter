@@ -119,8 +119,8 @@ const Booking_And_services = () => {
 
         {/* Popup Modal */}
         {isOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md flex justify-center items-center z-50">
-            <div className=" rounded-lg p-8 w-fit text-center">
+          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md flex justify-center items-center z-50 flex-row">
+            <div className=" rounded-lg p-8 w-fit text-center flex ">
               <button
                 onClick={closePopup}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
@@ -128,11 +128,11 @@ const Booking_And_services = () => {
                 &times;
               </button>
               {/* booking section with 4 bubas */}
-              <div className=" z-10 w-full h-4/5 text-center top-0 heading-text-gray flex flex-col laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10 ">
+              <div className=" z-10 w-full h-4/5 text-center top-0 heading-text-gray flex flex-col laptop:justify-center items-center phone:justify-start phone:mt-24  tablet:mt-10 ">
                 {/* booking section */}
                 <div className="Booking-section relative lg:mx-20 bg-[#949597] rounded-xl  drop-shadow-lg p-4 lg:p-0 text-black ">
                   {/* City btn only for phone */}
-                  <div className=" City-btn w-full laptop:hidden bg-white rounded-xl my-4">
+                  <div className=" City-btn w-full laptop:hidden bg-white rounded-xl my-4 ">
                     <button
                       className="flex mx-5 mt-3"
                       onClick={() => {
@@ -152,49 +152,12 @@ const Booking_And_services = () => {
                     </button>
                   </div>
                   {/* Vehicle for phone */}
-                  <div className="flex gap-5 laptop:hidden w-fit justify-center items-center">
+                  <div className="flex gap-5 laptop:hidden w-fit justify-center items-center ">
                     {/* <div className="laptop:hidden flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll"> */}
-                    <div className=" flex flex-col w-40 tablet:w-fit overflow-hidden overflow-x-scroll justify-start items-start ">
+                    <div className=" flex flex-col w-40 tablet:w-fit overflow-hidden  justify-centre items-center ">
                       {VehicleData.map((field, index) => (
                         <Vehicle key={index} field={field} />
                       ))}
-                    </div>
-
-                    {/* Estimation Btn */}
-                    <div>
-                      <Link
-                        to={`/booking`}
-                        className=" phone:w-32 h-32  tablet:w-36 p-2  flex flex-col justify-between bg-secondary-color rounded-2xl drop-shadow-lg hover:scale-110  hover:drop-shadow-2xl transition duration-200 ease-in-out bg-[#DF3F33]"
-                      >
-                        <span className="text-xl  heading-text-gray">
-                          Book a parcel{" "}
-                        </span>
-                        <span className=" heading-text-gray">
-                          <CornerDownRight />
-                        </span>
-                      </Link>
-                    </div>
-                  </div>
-                  {/* Vehicle for laptop */}
-                  <div className="Vehicle phone:hidden laptop:flex bg-[#949597] ">
-                    <div className="flex w-full h-[100%] justify-center items-start py-16 gap-10 text-black ">
-                      {/* All vehicles */}
-                      {VehicleData.map((field, index) => (
-                        <Vehicle key={index} field={field} />
-                      ))}
-
-                      {/* Estimation Btn */}
-                      <div>
-                        <Link
-                          to={`/booking`}
-                          className=" h-32 w-32 p-2 my-3  flex flex-col justify-between text-white rounded-2xl drop-shadow-lg hover:scale-110 hover:drop-shadow-2xl transition duration-200 ease-in-out bg-[#DF3F33]"
-                        >
-                          <span className="text-2xl ">Book a parcel </span>
-                          <span>
-                            <CornerDownRight />
-                          </span>
-                        </Link>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -202,7 +165,7 @@ const Booking_And_services = () => {
 
               <button
                 onClick={closePopup}
-                className="mt-10 px-6 py-3 bg-[#D5D4D7] text-black rounded-lg font-semibold hover:bg-[#DF3F33] hover:text-white transition duration-300 ease-in-out"
+                className="my-24 px-6 py-3 mx-10  h-fit bg-[#D5D4D7] text-black rounded-lg font-semibold hover:bg-[#DF3F33] hover:text-white transition duration-300 ease-in-out"
               >
                 Close
               </button>
