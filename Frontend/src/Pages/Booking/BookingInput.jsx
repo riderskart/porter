@@ -665,8 +665,8 @@ export default function BookingInput() {
       <div className="absolute h-[40vh] overflow-hidden phone:hidden laptop:block">
         <img src={BackgroundImage} className=" w-full " />
       </div>
-      <div className="laptop:h-80 relative w-full z-50">
-        <div className=" phone:max-w-[90vw] laptop:max-w-[80vw] laptop:absolute bottom-20 laptop:mx-40 phone:mx-20 p-6 backdrop-blur-2xl rounded-lg shadow-lg phone:h-fit phone:top-4 phone:mb-10 laptop:-top-40">
+      <div className="laptop:h-80 relative w-full z-40">
+        <div className=" phone:max-w-[90vw] laptop:max-w-[80vw] laptop:absolute bottom-20 laptop:mx-40 phone:mx-auto p-6 backdrop-blur-2xl rounded-lg shadow-lg phone:h-fit phone:top-4 phone:mb-10 laptop:-top-40 w-full">
           <form ref={formRef} action="">
             <AnimatePresence custom={direction} mode="wait">
               <motion.div
