@@ -3,7 +3,7 @@ import { alertError } from "./Alert";
 import { parseErrorMessage } from "./ErrorMessageParser";
 
 export const FetchData = async (url, method, data = null) => {
-  const Base_URL = "http://localhost:3000/api/v1";
+  const Base_URL = `${process.env.DomainUrl}/api/v1`;
   const AccessToken = localStorage.getItem("AccessToken");
 
   if (!AccessToken) {
