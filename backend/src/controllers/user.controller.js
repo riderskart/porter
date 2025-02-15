@@ -186,48 +186,44 @@ const LogOutUser = asyncHandler(async (req, res) => {
 });
 
 const regenerateRefreshToken = asyncHandler(async (req, res) => {
-  try {
-    const token = req.cookies.RefreshToken || req.body.RefreshToken;
+  const token = req.cookies.RefreshToken || req.body.RefreshToken;
 
-    if (!token) throw new ApiError(401, "Unauthorized request");
+  if (!token) throw new ApiError(401, "Unauthorized request");
 
-    const DecodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+  const DecodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
 
-    const user = await User.findById(DecodedToken._id).select(
-      "-password -refreshToken"
-    );
+  const user = await User.findById(DecodedToken._id).select(
+    "-password -refreshToken"
+  );
 
-    if (!user) throw new ApiError(400, "Invalid Token");
+  if (!user) throw new ApiError(400, "Invalid Token");
 
-    const { RefreshToken, AccessToken } = await generateAccessAndRefreshTokens(
-      user._id
-    );
+  const { RefreshToken, AccessToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
 
-    return res
-      .status(201)
-      .cookie("RefreshToken", RefreshToken, options)
-      .cookie("AccessToken", AccessToken, options)
-      .json(
-        new ApiResponse(
-          201,
-          {
-            user,
-            tokens: {
-              AccessToken,
-              RefreshToken,
-            },
+  return res
+    .status(201)
+    .cookie("RefreshToken", RefreshToken, options)
+    .cookie("AccessToken", AccessToken, options)
+    .json(
+      new ApiResponse(
+        201,
+        {
+          user,
+          tokens: {
+            AccessToken,
+            RefreshToken,
           },
-          "Refresh token regenerated successfully"
-        )
-      );
-  } catch (error) {
-    throw new ApiError(401, error.message || "Invalid Token");
-  }
+        },
+        "Refresh token regenerated successfully"
+      )
+    );
 });
 
 const GetAllUsers = asyncHandler(async (req, res) => {
