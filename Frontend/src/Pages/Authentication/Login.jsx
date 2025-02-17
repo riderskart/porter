@@ -3,7 +3,6 @@ import { useRef, useState } from "react";
 import ButtonWrapper from "../../Components/Buttons";
 import {
   Bike,
-  ChevronDown,
   ChevronRight,
   Eye,
   EyeOff,
@@ -30,7 +29,6 @@ const LogIn = () => {
   const [showPassword, setShowPassword] = useState("password");
   const navigate = useNavigate();
   const Dispatch = useDispatch();
-  const [selected, setSelected] = useState("Personal");
 
   // All function
 
@@ -94,7 +92,7 @@ const LogIn = () => {
       alertSuccess(response.data.message);
     } catch (error) {
       console.log(error);
-      // alertError(parseErrorMessage(error.response.data));
+      alertError(parseErrorMessage(error.response.data));
     }
   };
 
@@ -122,22 +120,22 @@ const LogIn = () => {
           <div
             className={`flex items-center justify-center gap-2 mx-5 px-6 py-3 rounded-lg cursor-pointer 
         ${
-          selected === "Personal"
+          selectedForm === "Personal"
             ? "bg-[#DF3F33] text-white border-[#DF3F33]"
             : "border-[#D5D5D7] text-black"
         } border-2`}
-            onClick={() => setSelected("Personal")}
+            onClick={() => setSelectedForm("Personal")}
           >
             <input
               type="radio"
               name="Form"
               id="Personal"
               value="Personal"
-              checked={selected === "Personal"}
+              checked={selectedForm === "Personal"}
               onChange={handleRadioChange}
               className="hidden"
             />
-            {selected === "Personal" && <Check size={20} />}
+            {selectedForm === "Personal" && <Check size={20} />}
             <label htmlFor="Personal" className="cursor-pointer">
               <h1 className="flex justify-center items-center gap-2">
                 <User /> Personal
@@ -149,22 +147,22 @@ const LogIn = () => {
           <div
             className={`flex items-center justify-center gap-2 mx-5 px-6 py-3 rounded-lg cursor-pointer 
         ${
-          selected === "DeliveryPartner"
+          selectedForm === "DeliveryPartner"
             ? "bg-[#DF3F33] text-white border-[#DF3F33]"
             : "border-[#D5D5D7] text-black"
         } border-2`}
-            onClick={() => setSelected("DeliveryPartner")}
+            onClick={() => setSelectedForm("DeliveryPartner")}
           >
             <input
               type="radio"
               name="Form"
               id="DeliveryPartner"
               value="DeliveryPartner"
-              checked={selected === "DeliveryPartner"}
+              checked={selectedForm === "DeliveryPartner"}
               onChange={handleRadioChange}
               className="hidden"
             />
-            {selected === "DeliveryPartner" && <Check size={20} />}
+            {selectedForm === "DeliveryPartner" && <Check size={20} />}
             <label htmlFor="DeliveryPartner" className="cursor-pointer">
               <h1 className="flex justify-center items-center gap-2">
                 <Bike /> Delivery Partner
