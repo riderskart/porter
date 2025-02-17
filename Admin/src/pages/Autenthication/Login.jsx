@@ -4,16 +4,16 @@ import Input from "../../Components/Input";
 import { FetchData } from "../../Utils/fetchFromAPI";
 
 const Login = () => {
-  const [email, setemail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const formRef = useRef(null);
 
-  const handleemailChange = (e) => {
+  const handleEmailChange = (e) => {
     console.log("Email:", e.target.value);
-    setemail(e.target.value);
+    setEmail(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -41,6 +41,7 @@ const Login = () => {
         window.location.href = "/home";
       }
     } catch (error) {
+      console.error("Login error:", error);
       setError("Login failed, please try again.");
     } finally {
       setLoading(false);
@@ -62,7 +63,7 @@ const Login = () => {
                 type="email"
                 placeholder="Email"
                 value={email}
-                onChange={handleemailChange}
+                onChange={handleEmailChange}
               />
               <Input
                 name="password"

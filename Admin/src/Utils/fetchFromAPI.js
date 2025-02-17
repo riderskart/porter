@@ -6,10 +6,6 @@ export const FetchData = async (url, method, data = null) => {
   const Base_URL = `${process.env.DomainUrl}/api/v1`;
   const AccessToken = localStorage.getItem("AccessToken");
 
-  if (!AccessToken) {
-    throw new Error("No Access Token available");
-  }
-
   const options = {
     headers: {
       "Content-Type": "application/json",

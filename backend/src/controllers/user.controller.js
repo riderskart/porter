@@ -131,8 +131,12 @@ const AdminLogin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
     throw new ApiError(401, "email and password are required");
+
   const Admin = await User.findOne({ email });
   if (!Admin) throw new ApiError(404, "Provided email is not found");
+
+  if (!Admin.admin) throw new ApiError(401, "You are not an admin");
+
   const isValid = await Admin.isPasswordCorrect(password);
   if (!isValid) throw new ApiError(401, "Entered Credential is not correct");
   const { AccessToken, RefreshToken } = await generateAccessAndRefreshTokens(
