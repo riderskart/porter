@@ -106,23 +106,54 @@ export default function DeliveryPartnerHome() {
 
   const ToggleSwitch = () => {
     const [isActive, setIsActive] = useState(true);
+    const [location, setLocation] = useState(null);
 
-    // Function to send the toggle state to the backend
-    const sendToggleState = async (state) => {
-      try {
-        const response = await FetchData(
-          `driver/toggle-active-driver/${user[0]?._id}`,
-          "post"
+    useEffect(() => {
+      if (localStorage.getItem("locationPermission") === "granted") {
+        getLocation();
+      }
+    }, []);
+
+    const getLocation = async () => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation({ latitude, longitude });
+
+            console.log("Location Updated:", latitude, longitude);
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+          }
         );
-        console.log(response);
-        console.log("Toggle state sent successfully", state);
-      } catch (error) {
-        console.error("Error sending toggle state:", error);
+      } else {
+        console.error("Geolocation is not supported by this browser.");
       }
     };
 
     const handleToggle = async () => {
-      await sendToggleState();
+      if (!isActive) {
+        if (!localStorage.getItem("locationPermission")) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              setLocation({ latitude, longitude });
+
+              // Store permission in local storage
+              localStorage.setItem("locationPermission", "granted");
+
+              console.log("Location fetched:", latitude, longitude);
+            },
+            (error) => {
+              console.error("Location permission denied:", error);
+            }
+          );
+        } else {
+          getLocation();
+        }
+      }
+
       setIsActive(!isActive);
     };
 
@@ -144,6 +175,12 @@ export default function DeliveryPartnerHome() {
         <span className="font-semibold text-lg">
           {isActive ? "Active" : "Inactive"}
         </span>
+
+        {location && (
+          <div className="text-sm text-gray-600">
+            Lat: {location.latitude}, Lng: {location.longitude}
+          </div>
+        )}
       </div>
     );
   };
