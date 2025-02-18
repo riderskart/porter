@@ -12,7 +12,6 @@ import { parseErrorMessage } from "../../../utility/ErrorMessageParser";
 import io from "socket.io-client";
 import { addAllAppointment } from "../../../utility/Slice/AllAppointmentsSlice";
 
-
 const socket = io(process.env.DomainUrl);
 export default function DeliveryPartnerHome() {
   const Navigate = useNavigate();
@@ -25,7 +24,7 @@ export default function DeliveryPartnerHome() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const user = useSelector((store) => store.UserInfo.user);
-  console.log(user);
+  // console.log(user);
   const [CurrentPartner, setPartner] = useState(null);
 
   const options = [
@@ -72,7 +71,7 @@ export default function DeliveryPartnerHome() {
   useEffect(() => {
     if (socket && user) {
       // Join the room with the delivery partner's ID
-      console.log(user);
+      // console.log(user);
       socket.emit("DriversRoom", user[0]?._id);
 
       // Listen for new order notifications
@@ -105,60 +104,83 @@ export default function DeliveryPartnerHome() {
   };
 
   const ToggleSwitch = () => {
-    const [isActive, setIsActive] = useState(true);
-    const [location, setLocation] = useState(null);
+    const [isActive, setIsActive] = useState(false);
+    const [coordinates, setLocationHistory] = useState({});
+    const [locationPermissionGranted, setLocationPermissionGranted] =
+      useState(false);
 
-    useEffect(() => {
-      if (localStorage.getItem("locationPermission") === "granted") {
-        getLocation();
-      }
-    }, []);
-
-    const getLocation = async () => {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setLocation({ latitude, longitude });
-
-            console.log("Location Updated:", latitude, longitude);
-          },
-          (error) => {
-            console.error("Error getting location:", error);
-          }
-        );
-      } else {
-        console.error("Geolocation is not supported by this browser.");
-      }
-    };
-
-    const handleToggle = async () => {
-      if (!isActive) {
-        if (!localStorage.getItem("locationPermission")) {
+    // Function to fetch live location
+    const getLiveLocation = () => {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("Geolocation is not supported by your browser."));
+        } else {
           navigator.geolocation.getCurrentPosition(
             (position) => {
               const { latitude, longitude } = position.coords;
-              setLocation({ latitude, longitude });
-
-              // Store permission in local storage
-              localStorage.setItem("locationPermission", "granted");
-
-              console.log("Location fetched:", latitude, longitude);
+              resolve({ latitude, longitude });
             },
             (error) => {
-              console.error("Location permission denied:", error);
+              reject(new Error("Error fetching location: " + error.message));
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 0,
             }
           );
-        } else {
-          getLocation();
         }
-      }
+      });
+    };
 
-      setIsActive(!isActive);
+    // const sendToggleState = async (locations) => {
+    //   if (user?.length > 0) {
+    //     try {
+    //       const response = await FetchData(
+    //         `driver/toggle-active-driver/${user[0]?._id}`,
+    //         "post",
+    //         { coordinates: locations }
+    //       );
+    //       console.log(response);
+    //       console.log("Toggle state & locations sent successfully", {
+    //         locations,
+    //       });
+    //     } catch (error) {
+    //       console.error("Error sending toggle state:", error);
+    //     }
+    //   }
+    // };
+    // useEffect(() => {
+    //   sendToggleState();
+    // }, [user]);
+
+    const handleToggle = async () => {
+      try {
+        const coords = await getLiveLocation();
+        console.log(coords);
+        //         {
+        //     "latitude": 23.3972257,
+        //     "longitude": 85.3685138
+        // }
+        setLocationHistory((prevHistory) => ({ ...prevHistory, ...coords })); // Append new location
+        setLocationPermissionGranted(true);
+        const response = await FetchData(
+          `driver/toggle-active-driver/${user[0]?._id}`,
+          "post",
+          { coordinates: [coords.longitude, coords.latitude] }
+        );
+        console.log(response);
+        console.log("Toggle state & locations sent successfully", {
+          coords,
+        });
+        setIsActive(!isActive);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     return (
-      <div className="flex items-center space-x-4">
+      <div className="flex flex-col items-center space-y-2">
         <div
           onClick={handleToggle}
           className={`w-16 h-8 flex items-center cursor-pointer rounded-full p-1 transition-all duration-300 ${
@@ -176,9 +198,12 @@ export default function DeliveryPartnerHome() {
           {isActive ? "Active" : "Inactive"}
         </span>
 
-        {location && (
-          <div className="text-sm text-gray-600">
-            Lat: {location.latitude}, Lng: {location.longitude}
+        {isActive && Object.keys(coordinates).length > 0 && (
+          <div className="text-sm text-gray-700">
+            <p>
+              Last Location: {Object.keys(coordinates).pop()},{" "}
+              {Object.values(coordinates).pop()}
+            </p>
           </div>
         )}
       </div>

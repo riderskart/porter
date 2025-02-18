@@ -257,7 +257,7 @@ const RegenerateRefreshToken = asyncHandler(async (req, res) => {
   if (!token) throw new ApiError(401, "Unauthorized request");
 
   const DecodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
-  console.log(DecodedToken);
+  // console.log(DecodedToken);
   const user = await DeliveryPartner.findById(DecodedToken._id).select(
     "-password -refreshToken"
   );
