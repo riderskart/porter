@@ -71,19 +71,16 @@ const Booking_And_services = () => {
   };
   const OurServicesCard = ({ field }) => {
     return (
-      <div className="relative laptop:h-52 laptop:w-96 phone:h-fit phone:flex-row rounded-xl backdrop-blur-md backdrop-brightness-95 text-black mb-10 drop-shadow-xl overflow-hidden shadow flex laptop:justify-around laptop:items-start phone:justify-evenly phone:items-center laptop:flex-col">
-        {/* pink and white color background */}
-        {/* <div class="absolute top-0 z-[-2] h-screen w-screen rotate-180 transform bg-white bg-[radial-gradient(60%_120%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(252,205,238,.5)_100%)]"></div> */}
-
-        {/* red and gray color background */}
-        {/* <div className="absolute top-0 z-[-2] h-screen w-screen rotate-180 transform bg-white bg-[radial-gradient(60%_120%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(128,128,128,.5)_50%,rgba(255,0,0,.5)_100%)]"></div> */}
-
-        <div className="Name text-black py-5 px-5">
-          <span className="rounded-r-full font-Fredoka text-4xl">
+      <div className="relative laptop:h-52 laptop:w-96 phone:h-fit phone:flex-row rounded-xl backdrop-blur-md backdrop-brightness-95 text-black laptop:mb-10 phone:mb-2 phone:min-w-full drop-shadow-xl overflow-hidden shadow flex laptop:justify-around laptop:items-start phone:justify-evenly phone:items-center laptop:flex-col phone:flex">
+        <div className="Image w-full h-full laptop:hidden">
+          <img src={field.image} alt="" className="object-cover h-28 w-28" />
+        </div>
+        <div className="Name text-black laptop:py-5 laptop:px-5 phone:py-1 phone:px-2 phone:w-full">
+          <span className="rounded-r-full font-Fredoka phone:text-lg laptop:text-xl phone:w-full">
             {field.name}
           </span>
         </div>
-        <div className="Description text-xl px-5 font-Fredoka heading-text-gray phone:hidden laptop:block">
+        <div className="Description text-base laptop:px-5 phone:px-2 font-Fredoka heading-text-gray phone:hidden laptop:block">
           {field.description}
         </div>
         <div className="laptop:px-5 phone:hidden laptop:block">
@@ -275,11 +272,11 @@ const Booking_And_services = () => {
         {/* Our services card for mobile */}
         <div className="OurServices overflow-hidden relative tablet:hidden mt-10">
           <div
-            className={`flex phone:flex-col transition ease-out duration-100 justify-center items-center`}
+            className={`flex phone:flex-col transition ease-out duration-100 justify-center items-center phone:w-full`}
           >
             {OurServices.map((item, index) => {
               return (
-                <div key={index} className="">
+                <div key={index} className="phone:w-3/4 phone:mx-2">
                   <OurServicesCard field={item} />
                 </div>
               );

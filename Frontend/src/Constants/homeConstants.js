@@ -6,10 +6,16 @@ import logo from "../assets/Logo.png";
 import scooty from "../assets/Home/scooty.png";
 import pickup from "../assets/Home/pickup.png";
 
-import Bike from "../assets/Home/EBikeImage.png"
-import EComImage from "../assets/Home/EcomImage.png"
-import EShiftingImage from "../assets/Home/EShiftingImage.jpeg"
-import ETruck from "../assets/Home/ETruckImage.jpeg"
+import Bike from "../assets/Home/EBikeImage.png";
+import EComImage from "../assets/Home/EcomImage.png";
+import EShiftingImage from "../assets/Home/EShiftingImage.jpeg";
+import ETruck from "../assets/Home/ETruckImage.jpeg";
+
+import Vector2 from "../assets/Home/Vector2.png";
+import Vector1 from "../assets/Home/Vector1.png";
+import Vector3 from "../assets/Home/Vector3.png";
+import Vector4 from "../assets/Home/Vector4.png";
+import Vector5 from "../assets/Home/Vector5.png";
 
 export const VehicleData = [
   {
@@ -57,22 +63,27 @@ export const OurServices = [
   {
     name: "2 Wheelers",
     description: "Instant delivery for up to 20 kgs.",
+    image: Vector1,
   },
   {
     name: "Mini Trucks",
     description: "Hassle-free goods delivery up to 2500 kgs.",
+    image: Vector2,
   },
   {
     name: "API Integration",
     description: "Integration of our APIs is available to developers",
+    image: Vector3,
   },
   {
     name: "E Comm. Services",
     description: "We also offer Shopping Platform",
+    image: Vector4,
   },
   {
     name: "Insurance Services",
     description: "Need to insure your goods for transportation",
+    image: Vector5,
   },
   // {
   //   name: "Riders Kart for Enterprise",

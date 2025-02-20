@@ -97,7 +97,7 @@ const LogIn = () => {
   };
 
   return (
-    <div className=" shadow-lg shadow-[#949597] laptop:flex justify-center items-center w-full h-full py-20 gap-20">
+    <div className=" shadow-lg shadow-[#949597] laptop:flex justify-center items-center w-full h-full laptop:py-10 gap-20">
       <section className="LOGIN-IMG w-[40%] hidden lg-block ">
         {selectedForm === "Personal" ? (
           <img src={LogInImg} alt="" className="laptop:h-[60vh] phone:w-full" />
@@ -110,7 +110,7 @@ const LogIn = () => {
         )}
       </section>
 
-      <section className="Form_side bg-[#949597] m-5 px-24 rounded-lg shadow-lg shadow-[#949597] py-10 ">
+      <section className="Form_side bg-[#949597] m-5 laptop:px-24 rounded-lg shadow-lg shadow-[#949597] laptop:py-10 phone:py-5 ">
         <h1 className="text-center mt-2 mb-5 text-xl text-black font-bold font-serif heading-text-gray">
           Login
         </h1>
@@ -292,7 +292,7 @@ const LogIn = () => {
           </form>
         )}
 
-        <div className="Sign_UP_Options my-5 ">
+        <div className="Sign_UP_Options phone:mx-4 my-5 ">
           <h3 className="text-center text-black bg-white text-opacity-80 shadow rounded-xl p-2">
             Don't have an account?
             <Link
@@ -303,7 +303,7 @@ const LogIn = () => {
             </Link>
           </h3>
         </div>
-        <div className="Sign_UP_Options my-5">
+        <div className="Sign_UP_Options phone:mx-4 my-5">
           <h3 className="flex bg-white justify-center items-center text-center text-black text-opacity-80 shadow rounded-xl p-2">
             To become delivery partner{" "}
             <span>
