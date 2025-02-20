@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { io } from "../app.js";
+import SendMail from "../utils/Nodemailer.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -53,6 +54,22 @@ const RegisterUser = asyncHandler(async (req, res) => {
 
   const { AccessToken, RefreshToken } = await generateAccessAndRefreshTokens(
     CreatedUser?._id
+  );
+
+  SendMail(
+    email,
+    "Successfully registered at Rider's Kart",
+    "Welcome to Rider's Kart",
+    `<b><h1>Congratulations Mr./Mrs. ${name} </h1>,<br/> <h3>You have successfully register to Rider's Kart.<br/>
+    We offer several options for delivering your options
+
+    Here are your Account details
+      Name:${name}
+      Contact:${number}
+      Email:${email}
+
+    If not registered from your end, kindly reply <a href="https://honeydew-mule-369122.hostingersite.com">Delete my account</a> on this email.
+   </h3> <b/>`
   );
 
   const options = {
