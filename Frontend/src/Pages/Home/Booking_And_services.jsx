@@ -95,6 +95,25 @@ const Booking_And_services = () => {
     index++;
     console.log(current);
   };
+
+  async function getAddressFromCoordinates(latitude, longitude) {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      return data || "Address not found";
+    } catch (error) {
+      console.error("Error fetching address:", error);
+      return null;
+    }
+  }
+
+  // Example usage
+  getAddressFromCoordinates(23.3971922, 85.3723552)
+    .then((address) => console.log("Address:", address))
+    .catch((error) => console.error(error));
+
   const PopupButton = () => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -102,14 +121,19 @@ const Booking_And_services = () => {
     const closePopup = () => setIsOpen(false);
 
     return (
-      <div className="flex flex-col  justify-center items-center h-screen bg-transparent laptop:hidden">
+      <div className="flex flex-col  justify-center items-center h-fit bg-transparent laptop:hidden ">
         <h1 className="flex flex-col justify-center items-center gap-2">
           <span className="text-4xl font-semibold">Rider's Kart</span>
-          <span>Most favourable application for sending Parcels </span>
+          <span>Most favorable application for sending Parcels </span>
         </h1>
+        <div className="w-[90vw] flex flex-wrap justify-evenly tablet:w-fit overflow-hidden items-center   ">
+          {VehicleData.map((field, index) => (
+            <Vehicle key={index} field={field} />
+          ))}
+        </div>
         <button
           onClick={openPopup}
-          className="px-8 py-5 mt-5 text-xl rounded-2xl drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out bg-[#DF3F33] text-white"
+          className="px-4 py-2 mt-2 text-xl rounded-2xl drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out bg-[#DF3F33] text-white"
         >
           Tap to book parcel
         </button>
@@ -117,7 +141,7 @@ const Booking_And_services = () => {
         {/* Popup Modal */}
         {isOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md flex justify-center items-center z-50 flex-row">
-            <div className=" rounded-lg p-8 w-fit text-center flex ">
+            <div className=" rounded-lg p-8 w-fit text-center flex flex-col ">
               <button
                 onClick={closePopup}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
@@ -127,11 +151,11 @@ const Booking_And_services = () => {
               {/* booking section with 4 bubas */}
               <div className=" z-10 w-full h-4/5 text-center top-0 heading-text-gray flex flex-col laptop:justify-center items-center phone:justify-start phone:mt-24  tablet:mt-10 ">
                 {/* booking section */}
-                <div className="Booking-section relative lg:mx-20 bg-[#949597] rounded-xl  drop-shadow-lg p-4 lg:p-0 text-black ">
+                <div className="Booking-section relative min-w-[80%] lg:mx-20 bg-[#949597] rounded-xl  drop-shadow-lg py-4 lg:p-0 text-black   ">
                   {/* City btn only for phone */}
-                  <div className=" City-btn w-full laptop:hidden bg-white rounded-xl my-4 ">
+                  <div className=" City-btn  laptop:hidden bg-white rounded-xl my-4 mx-2 py-1 flex flex-col justify-center items-start  ">
                     <button
-                      className="flex mx-5 mt-3"
+                      className="flex mx-5 cursor-pointer "
                       onClick={() => {
                         setCityMenu({
                           isOpened: true,
@@ -146,15 +170,20 @@ const Booking_And_services = () => {
                       <span className="font-bold mx-2 text-xl heading-text-gray">
                         Ranchi
                       </span>
+                      <span>
+                        <ChevronDown />
+                      </span>
                     </button>
                   </div>
                   {/* Vehicle for phone */}
-                  <div className="flex gap-5 laptop:hidden w-fit justify-center items-center ">
+                  <div className="flex gap-5 laptop:hidden w-full justify-center items-center ">
                     {/* <div className="laptop:hidden flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll"> */}
-                    <div className=" flex flex-col w-40 tablet:w-fit overflow-hidden  justify-centre items-center ">
-                      {VehicleData.map((field, index) => (
+                    <div className=" flex flex-wrap justify-evenly tablet:w-fit overflow-hidden items-center ">
+                      {/* {VehicleData.map((field, index) => (
                         <Vehicle key={index} field={field} />
-                      ))}
+                      ))} */}
+                      <Vehicle key={1} field={VehicleData[0]} />
+                      <Vehicle key={2} field={VehicleData[1]} />
                     </div>
                   </div>
                 </div>
@@ -162,7 +191,7 @@ const Booking_And_services = () => {
 
               <button
                 onClick={closePopup}
-                className="my-24 px-6 py-3 mx-10  h-fit bg-[#D5D4D7] text-black rounded-lg font-semibold hover:bg-[#DF3F33] hover:text-white transition duration-300 ease-in-out"
+                className="my-10 px-6 py-3 mx-10  h-fit bg-[#D5D4D7] text-black rounded-lg font-semibold hover:bg-[#DF3F33] hover:text-white transition duration-300 ease-in-out"
               >
                 Close
               </button>
@@ -176,11 +205,15 @@ const Booking_And_services = () => {
   return (
     <div className="BODY  flex flex-col justify-center items-center bg-[#D5D5D7] select-none">
       {/* Bg Image and text */}
-      <div className="BG-and-Text relative laptop:h-[70vh] tablet:h-[30vh] overflow-hidden">
-        <img src={HomeBackGround} alt="" className="w-full" />
+      <div className="BG-and-Text relative phone:h-[70vh] laptop:h-[70vh]  tablet:h-[30vh] overflow-hidden">
+        <img
+          src={HomeBackGround}
+          alt=""
+          className="w-full phone:h-full laptop:h-auto"
+        />
         <div className="absolute z-10 w-full h-4/5 text-center top-0 heading-text-gray flex gap-10 laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10 ">
           {/* <PopupButton /> */}
-          <div className=" z-10 w-full h-4/5 text-center top-0 heading-text-gray flex flex-col laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10  ">
+          <div className=" z-10 w-full h-4/5 text-center  heading-text-gray flex flex-col laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10  ">
             {/* booking section */}
             <div className="Booking-section relative lg:mx-20 bg-transparent rounded-xl  drop-shadow-lg p-4 lg:p-0 text-black backdrop-blur-sm shadow-neutral-600 shadow-2xl laptop:block phone:hidden">
               {/* City btn */}
@@ -260,7 +293,10 @@ const Booking_And_services = () => {
       </div> */}
 
       {/* Our Services */}
-      <section className="Our-Services  w-full h-fit mb-20 relative inset-0 bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
+      <section
+        id="services"
+        className="Our-Services  w-full h-fit mb-20  relative inset-0 bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"
+      >
         {/* <div class="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"></div> */}
         {/* Title */}
         <div className="Title pt-10  flex flex-col justify-center items-center">

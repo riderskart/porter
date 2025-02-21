@@ -661,7 +661,7 @@ export default function BookingInput() {
   }
 
   return (
-    <div className=" w-full phone:h-fit   ">
+    <div id="Booking_Input" className=" w-full phone:h-fit   ">
       <div className="absolute h-[40vh] overflow-hidden phone:hidden laptop:block">
         <img src={BackgroundImage} className=" w-full " />
       </div>

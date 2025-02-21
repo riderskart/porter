@@ -10,6 +10,7 @@ const FAQs = () => {
   const Question_Answer = ({ item, index }) => {
     return (
       <motion.div
+        
         className="my-10 hover:border border-[#949597] laptop:px-10 laptop:py-5 phone:px-5 phone:py-2 rounded-xl bg-primary"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -62,7 +63,10 @@ const FAQs = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center bg-[#D5D5D7]">
+    <div
+      id="FAQ"
+      className="flex flex-col justify-center items-center bg-[#D5D5D7]"
+    >
       {/* Heading */}
       <div className="Heading flex flex-col justify-center items-center">
         <h1 className="text-[3rem] font-semibold phone:text-[1.5rem] heading-text-gray font-Fredoka ">

@@ -32,6 +32,13 @@ const Footer = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleNavigate = () => {
+    if (!openNavigation) return;
+
+    enablePageScroll();
+    setOpenNavigation(false);
+  };
+
   return (
     <div className="bg-gray-900 text-white  select-none flex flex-col px-10 gap-5">
       <section className="Upper-part py-5 flex justify-around items-center phone:gap-10 flex-wrap">
@@ -82,13 +89,12 @@ const Footer = () => {
         <h1 className="text-xl">Company</h1>
         <ul className="flex gap-5 ">
           <li className="small-footer-text hover:underline">
-            <Link>About Us</Link>
+            <Link to={"#FAQ"} onClick={handleNavigate}>
+              About Us
+            </Link>
           </li>
           <li className="small-footer-text hover:underline">
             <Link>Careers</Link>
-          </li>
-          <li className="small-footer-text hover:underline">
-            <Link>Blog</Link>
           </li>
         </ul>
       </div>
@@ -96,11 +102,12 @@ const Footer = () => {
         <h1 className="text-xl">Quick Links </h1>
         <ul className="flex flex-wrap w-full gap-5 ">
           <li className="small-footer-text">
-            <Link> Services</Link>
+            <Link to={"#services"} onClick={handleNavigate}>
+              {" "}
+              Services
+            </Link>
           </li>
-          <li className="small-footer-text">
-            <Link> Tools</Link>
-          </li>
+
           <li className="small-footer-text">
             <Link> API Integrations</Link>
           </li>
@@ -111,10 +118,16 @@ const Footer = () => {
             <Link> Packers & Movers</Link>
           </li>
           <li className="small-footer-text">
-            <Link> Two Wheelers</Link>
+            <Link to={"#Booking_Input"} onClick={handleNavigate}>
+              {" "}
+              Two Wheelers
+            </Link>
           </li>
           <li className="small-footer-text">
-            <Link> Trucks </Link>
+            <Link to={"#Booking_Input"} onClick={handleNavigate}>
+              {" "}
+              Trucks{" "}
+            </Link>
           </li>
         </ul>
       </div>
@@ -141,6 +154,8 @@ const Footer = () => {
           </li>
         </ul>
       </div>
+
+      {/* Important comment, In future, It might be use full */}
       {/* <section className="We_are_here ">
         <h1 className="m-5 mb-0 ">We are here</h1>
         <ul className="grid laptop:grid-cols-5 phone:grid-cols-3 p-5">

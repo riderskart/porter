@@ -21,9 +21,6 @@ const Footer = () => {
             <li className="small-footer-text">
               <Link>Careers</Link>
             </li>
-            <li className="small-footer-text">
-              <Link>Blog</Link>
-            </li>
           </ul>
         </div>
 
@@ -33,9 +30,7 @@ const Footer = () => {
             <li className="small-footer-text">
               <Link> Services</Link>
             </li>
-            <li className="small-footer-text">
-              <Link> Tools</Link>
-            </li>
+
             <li className="small-footer-text">
               <Link> API Integrations</Link>
             </li>
