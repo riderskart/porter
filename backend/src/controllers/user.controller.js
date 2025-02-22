@@ -208,6 +208,7 @@ const LogOutUser = asyncHandler(async (req, res) => {
 
 const regenerateRefreshToken = asyncHandler(async (req, res) => {
   const token = req.cookies.RefreshToken || req.body.RefreshToken;
+  const { admin } = req.body;
 
   if (!token) throw new ApiError(401, "Unauthorized request");
 
@@ -218,6 +219,8 @@ const regenerateRefreshToken = asyncHandler(async (req, res) => {
   );
 
   if (!user) throw new ApiError(400, "Invalid Token");
+
+  if(admin && !user.admin) throw new ApiError(401, "You are not an admin");
 
   const { RefreshToken, AccessToken } = await generateAccessAndRefreshTokens(
     user._id

@@ -27,7 +27,6 @@ import { io } from "socket.io-client";
 
 const App = () => {
   const socketRef = useRef(null);
-  console.log(process.env.DomainUrl);
   const Dispatch = useDispatch();
   const [notifications, setNotifications] = useState([]);
   // Re-logging in after refreshing the page

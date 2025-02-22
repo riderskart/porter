@@ -29,6 +29,7 @@ const router = Router();
 
 //-----------------Route for admin Login --------------------------------//
 router.route("/login").post(AdminLogin);
+router.route("/re-login").post(AdminLogin);
 
 // User's routes
 router.route("/user/get-all-users").get(GetAllUsers);

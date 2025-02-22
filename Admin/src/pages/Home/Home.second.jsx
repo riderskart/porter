@@ -3,6 +3,7 @@ import { initialSections } from "../../Constants/Home.constant";
 import { FetchData } from "../../Utils/fetchFromAPI";
 import { Link } from "react-router-dom";
 import { alertSuccess } from "../../Utils/Alert";
+import { useSelector } from "react-redux";
 
 const Home2 = () => {
   const offerFormRef = useRef(null);
@@ -12,6 +13,10 @@ const Home2 = () => {
   const [statusFilter, setStatusFilter] = useState("");
   const [offerFilter, setOfferFilter] = useState("");
   const [showOfferForm, setShowOfferForm] = useState(false);
+
+  const user = useSelector((store) => store.UserInfo.user);
+  console.log("User:", user);
+
   // const [offerForm, setOfferForm] = useState({
   //   offerName: "",
   //   offerDescription: "",
@@ -76,8 +81,8 @@ const Home2 = () => {
   const handleOfferFormCancel = () => {};
 
   const userProfile = {
-    name: "John Doe",
-    profileImage: "https://via.placeholder.com/40",
+    name: user?.name || "Admin",
+    profileImage: "",
   };
 
   // console.log("Header")
@@ -228,6 +233,7 @@ const Home2 = () => {
       return matchesSearchQuery && matchesStatusFilter && matchesOfferFilter;
     }
   );
+
   const extractUserIds = (filteredData) => {
     // Use a Set to avoid duplicate user IDs
     const userIds = new Set();
