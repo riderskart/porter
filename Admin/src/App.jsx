@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-// import Home from "./pages/Home/Home.index";
 import Login from "./pages/Autenthication/Login";
 import Home2 from "./pages/Home/Home.second";
 import CurrentOrder from "./pages/Current-Order/CurrentOrder";
@@ -60,7 +59,7 @@ const App = () => {
         <Route path="/" element={<Login />} />
 
         {/* <Route path="/home" element={<Home />} /> */}
-        <Route path="/home" element={<Home2 />} />
+        <Route path="/home/:sec" element={<Home2 />} />
         <Route path="/current-order/:orderId" element={<CurrentOrder />} />
         <Route path="/current-user/:userId" element={<CurrentUser />} />
         <Route

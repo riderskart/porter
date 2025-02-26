@@ -53,7 +53,7 @@ const Login = () => {
 
       Dispatch(addUser(response.data.data.Admin));
 
-      window.location.href = "/home";
+      window.location.href = "/home/All_Orders";
     } catch (error) {
       console.error("Login error:", error);
       setError("Login failed, please try again.");

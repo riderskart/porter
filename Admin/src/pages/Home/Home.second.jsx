@@ -1,29 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import { initialSections } from "../../Constants/Home.constant";
 import { FetchData } from "../../Utils/fetchFromAPI";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { alertSuccess } from "../../Utils/Alert";
 import { useSelector } from "react-redux";
 
 const Home2 = () => {
   const offerFormRef = useRef(null);
   const [sections, setSections] = useState(initialSections);
-  const [selectedSection, setSelectedSection] = useState("All Orders");
+  const { sec } = useParams();
+  const [selectedSection, setSelectedSection] = useState(sec ?? "All_Orders");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [offerFilter, setOfferFilter] = useState("");
   const [showOfferForm, setShowOfferForm] = useState(false);
 
   const user = useSelector((store) => store.UserInfo.user);
-  console.log("User:", user);
-
-  // const [offerForm, setOfferForm] = useState({
-  //   offerName: "",
-  //   offerDescription: "",
-  //   offerPrice: "",
-  //   offerPercentage: "",
-  //   offerValidity: Date,
-  // });
 
   const offerFormInputs = [
     { title: "offerName", type: "text" },
@@ -32,14 +24,6 @@ const Home2 = () => {
     { title: "offerPercentage", type: "number" },
     { title: "offerValidity", type: "date" },
   ];
-
-  const formData = new FormData();
-  const testArray = ["value1", "value2", "value3"]; // Method 1: Append each element individuallytestArray.forEach((value) => {  formData.append('myArray[]', value);});// Method 2: Append as a JSON stringformData.append('myArray', JSON.stringify(testArray));
-
-  // const handleFormChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setOfferForm((prev) => ({ ...prev, [name]: value }));
-  // };
 
   const handleOfferFormSubmit = async (e) => {
     e.preventDefault();
@@ -78,8 +62,6 @@ const Home2 = () => {
     }
   };
 
-  const handleOfferFormCancel = () => {};
-
   const userProfile = {
     name: user?.name || "Admin",
     profileImage: "",
@@ -112,7 +94,8 @@ const Home2 = () => {
           ...prevSections,
           All_Orders: {
             ...prevSections.All_Orders,
-            tableData: data.map((order) => ({
+            tableData: data.map((order, i) => ({
+              Index: i + 1,
               BookingId: order._id,
               field: "orders",
               User_id: order.user,
@@ -137,7 +120,8 @@ const Home2 = () => {
           ...prevSections,
           Users: {
             ...prevSections.Users,
-            tableData: data.map((user) => ({
+            tableData: data.map((user, i) => ({
+              Index: i + 1,
               UserId: user._id,
               field: "users",
               Name: user.name,
@@ -164,7 +148,8 @@ const Home2 = () => {
           ...prevSections,
           DeliveryPartner: {
             ...prevSections.DeliveryPartner,
-            tableData: data.map((partner) => ({
+            tableData: data.map((partner, i) => ({
+              Index: i + 1,
               RequestId: partner._id,
               field: "pendingRequests",
               Name: partner.name,
@@ -192,7 +177,8 @@ const Home2 = () => {
           ...prevSections,
           VerifiedDeliveryPartner: {
             ...prevSections.VerifiedDeliveryPartner,
-            tableData: data.map((partner) => ({
+            tableData: data.map((partner, i) => ({
+              Index: i + 1,
               PartnerId: partner._id,
               field: "verifiedPartners",
               Name: partner.name,
@@ -245,6 +231,7 @@ const Home2 = () => {
     return Array.from(userIds);
   };
 
+  console.log("sections:", sections);
   // console.log(OfferFilteredData);
 
   return (
@@ -289,12 +276,19 @@ const Home2 = () => {
         <main className="flex-1 p-10 overflow-y-hidden pl-96 mt-20 ml-10">
           {sections[selectedSection] && (
             <section>
-              <h2 className="text-xl font-semibold mb-4">
-                {sections[selectedSection].title}
-              </h2>
-              <p className="text-gray-600 mb-4">
-                {sections[selectedSection].description}
-              </p>
+              <div className="grid grid-cols-2 grid-rows-2 gap-4">
+                <h2 className="text-xl font-semibold mb-4">
+                  {sections[selectedSection].title}
+                </h2>
+                {selectedSection != "All_Orders" && (
+                  <span className="text-xl font-semibold ">
+                    Total: {sections[selectedSection].tableData.length}
+                  </span>
+                )}
+                <p className="text-gray-600 mb-4 col-span-2">
+                  {sections[selectedSection].description}
+                </p>
+              </div>
 
               {selectedSection === "All_Orders" && (
                 <div className="mb-4">
@@ -317,9 +311,10 @@ const Home2 = () => {
                       className="p-2 border border-gray-300 rounded-lg"
                     >
                       <option value="">All</option>
-                      <option value="created">Created</option>
+                      <option value="created">New</option>
                       <option value="in-progress">In Progress</option>
                       <option value="cancelled">Cancelled</option>
+                      <option value="cancelled">Delivered</option>
                     </select>
                   </div>
 
@@ -414,23 +409,6 @@ const Home2 = () => {
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
               <h2 className="text-xl font-bold mb-4">Generate Offer</h2>
               <form ref={offerFormRef} onSubmit={handleOfferFormSubmit}>
-                {/* {Object.keys(offerForm).map((key) => (
-                  <div key={key} className="mb-4">
-                    <label className="block font-medium mb-2" htmlFor={key}>
-                      {key
-                        .replace(/([A-Z])/g, " $1")
-                        .replace(/^./, (str) => str.toUpperCase())}
-                    </label>
-                    <input
-                      type="text"
-                      id={key}
-                      name={key}
-                      value={offerForm[key]}
-                      onChange={handleFormChange}
-                      className="p-2 border border-gray-300 rounded-lg w-full"
-                    />
-                  </div>
-                ))} */}
                 {offerFormInputs.map((field, index) => {
                   return (
                     <div key={index} className="mb-4">
