@@ -2,27 +2,70 @@ import React from "react";
 import BookingInput from "./BookingInput";
 import { MapImg } from "../../Constants/BookingConstants";
 import { useState, useEffect, useRef } from "react";
+import { FetchData } from "../../utility/fetchFromAPI";
+import { alertSuccess } from "../../utility/Alert";
 
 const Booking = () => {
-
   const MapInput = () => {
     const [address, setAddress] = useState("");
     const [map, setMap] = useState(null);
     const [marker, setMarker] = useState(null);
+    const [location, setLocation] = useState({
+      lat: 28.681199800800137,
+      lng: 77.2224575871163,
+    }); // (Delhi, India)
     const mapRef = useRef(null);
+    const inputRef = useRef(null);
 
     useEffect(() => {
-      const initMap = () => {
+      const loadGoogleMaps = () => {
+        if (!window.google) {
+          const script = document.createElement("script");
+          script.src = process.env.MAPS_URL;
+          script.async = true;
+          script.defer = true;
+          script.onload = () => handleLocationPermission();
+          document.head.appendChild(script);
+        } else {
+          handleLocationPermission();
+        }
+      };
+
+      const handleLocationPermission = () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const userLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              };
+              setLocation(userLocation);
+              initializeMap(userLocation); // map with user's location
+            },
+            () => {
+              initializeMap(location); // default location if locationpermission is denied
+            }
+          );
+        } else {
+          initializeMap(location); // Use default location
+        }
+      };
+
+      const initializeMap = (initialLocation) => {
+        if (!window.google) {
+          console.error("Google Maps API failed to load.");
+          return;
+        }
+
         const google = window.google;
-        const initialPosition = { lat: 23.3441, lng: 85.3096 }; // default location (ranchi, India)
 
         const newMap = new google.maps.Map(mapRef.current, {
-          center: initialPosition,
-          zoom: 12,
+          center: initialLocation,
+          zoom: 16,
         });
 
         const newMarker = new google.maps.Marker({
-          position: initialPosition,
+          position: initialLocation,
           map: newMap,
           draggable: true,
         });
@@ -31,42 +74,100 @@ const Booking = () => {
 
         newMarker.addListener("dragend", () => {
           const position = newMarker.getPosition();
-          geocoder.geocode({ location: position }, (results, status) => {
+          const newLocation = { lat: position.lat(), lng: position.lng() };
+          setLocation(newLocation);
+          sendLocationToBackend(newLocation);
+
+          geocoder.geocode({ location: newLocation }, (results, status) => {
             if (status === "OK" && results[0]) {
               setAddress(results[0].formatted_address);
             }
           });
         });
 
+        newMap.addListener("click", (event) => {
+          const clickedLocation = {
+            lat: event.latLng.lat(),
+            lng: event.latLng.lng(),
+          };
+          setLocation(clickedLocation);
+          newMarker.setPosition(clickedLocation);
+          sendLocationToBackend(clickedLocation);
+
+          geocoder.geocode({ location: clickedLocation }, (results, status) => {
+            if (status === "OK" && results[0]) {
+              setAddress(results[0].formatted_address);
+            } else {
+              setAddress("Address not found");
+            }
+          });
+        });
+
         setMap(newMap);
         setMarker(newMarker);
+
+        const autocomplete = new google.maps.places.Autocomplete(
+          inputRef.current
+        );
+        autocomplete.setFields(["geometry", "formatted_address"]);
+
+        autocomplete.addListener("place_changed", () => {
+          const place = autocomplete.getPlace();
+          if (place.geometry) {
+            const newPosition = {
+              lat: place.geometry.location.lat(),
+              lng: place.geometry.location.lng(),
+            };
+            setLocation(newPosition);
+            setAddress(place.formatted_address);
+            sendLocationToBackend(newPosition);
+
+            newMarker.setPosition(newPosition);
+            newMap.setCenter(newPosition);
+          }
+        });
       };
 
-      if (!window.google) {
-        const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDZdeOdPnr9D_5CEQ7uBRxRU0l6I73IKZc_KEY&libraries=places`;
-        // script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places`;
-        script.async = true;
-        script.onload = () => initMap();
-        document.head.appendChild(script);
-      } else {
-        initMap();
-      }
+      loadGoogleMaps();
     }, []);
 
+    const sendLocationToBackend = async (location) => {
+      try {
+        const response = await FetchData("update-user-address", "post", {
+          latitude: location.lat,
+          longitude: location.lng,
+        });
+        console.log(response);
+        alertSuccess("Location set successfully");
+      } catch (error) {
+        console.error("Error sending location:", error);
+      }
+    };
+
     return (
-      <div className="flex flex-col items-center p-4 w-full h-full bg-[#FFFFFF]">
-        <input
-          type="text"
-          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={address}
-          readOnly
-          placeholder="Select a location on the map"
-        />
+      <div className="flex flex-row w-full h-screen bg-[#FFFFFF]">
         <div
           ref={mapRef}
-          className="w-full h-full mt-4 rounded-md shadow-lg bg-[#D5D5D7]"
+          className="main_map w-full h-[500px] rounded-md shadow-lg bg-[#D5D5D7]"
         ></div>
+
+        <div className="absolute backdrop-blur-lg right-0 top-32 h-fit py-10 px-5 rounded-xl">
+          <input
+            ref={inputRef}
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Search for a location..."
+          />
+          {/* Display selected address */}
+          <input
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded-md shadow-sm mt-2 bg-gray-100"
+            value={address}
+            readOnly
+          />
+          {console.log(location.lat)}
+          {console.log(location.lng)}
+        </div>
       </div>
     );
   };
@@ -75,7 +176,7 @@ const Booking = () => {
     <div>
       <div className="Map w-full  phone:h-[30vh] tablet:h-[27vh] laptop:h-[60vh] phone:hidden laptop:block">
         {/* <img src={MapImg} alt="" className="h-full w-full" /> */}
-      <MapInput />
+        <MapInput />
       </div>
       <BookingInput />
     </div>
