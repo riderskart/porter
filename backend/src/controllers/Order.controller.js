@@ -8,9 +8,10 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { io } from "../app.js";
 import { NotificationStructure } from "../utils/NotificationClass.js";
 
-const FindNearbyDrivers = async (Coordinates, Radius = 5000) => {
+export const FindNearbyDrivers = async (Coordinates, Radius = 5000) => {
   // Coordinates = [longitude, latitude]
 
+  console.log(Coordinates);
   const drivers = await DeliveryPartner.find({
     location: {
       $near: {
@@ -22,6 +23,9 @@ const FindNearbyDrivers = async (Coordinates, Radius = 5000) => {
       },
     },
     isAvailable: true,
+  }).then((drivers) => {
+    console.log(drivers);
+    return drivers;
   });
 
   return drivers;

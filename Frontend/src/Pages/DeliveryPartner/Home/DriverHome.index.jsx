@@ -67,7 +67,6 @@ export default function DeliveryPartnerHome() {
   ];
 
   // For socket connection
-
   useEffect(() => {
     if (socket && user) {
       // Join the room with the delivery partner's ID
@@ -103,13 +102,38 @@ export default function DeliveryPartnerHome() {
     setIsDropdownOpen(false);
   };
 
+  // UI component for switching the driver's active state
   const ToggleSwitch = () => {
-    const [isActive, setIsActive] = useState(false);
+    const [isActive, setIsActive] = useState(user[0]?.isActive || false);
     const [coordinates, setLocationHistory] = useState({});
     const [locationPermissionGranted, setLocationPermissionGranted] =
       useState(false);
 
     // Function to fetch live location
+    // const getLiveLocation = () => {
+    //   return new Promise((resolve, reject) => {
+    //     if (!navigator.geolocation) {
+    //       reject(new Error("Geolocation is not supported by your browser."));
+    //     } else {
+    //       navigator.geolocation.getCurrentPosition(
+    //         (position) => {
+    //           console.log(position);
+    //           const { latitude, longitude } = position.coords;
+    //           resolve({ latitude, longitude });
+    //         },
+    //         (error) => {
+    //           reject(new Error("Error fetching location: " + error));
+    //         },
+    //         {
+    //           enableHighAccuracy: true,
+    //           timeout: 10000,
+    //           maximumAge: 0,
+    //         }
+    //       );
+    //     }
+    //   });
+    // };
+
     const getLiveLocation = () => {
       return new Promise((resolve, reject) => {
         if (!navigator.geolocation) {
@@ -117,11 +141,28 @@ export default function DeliveryPartnerHome() {
         } else {
           navigator.geolocation.getCurrentPosition(
             (position) => {
+              console.log(position);
               const { latitude, longitude } = position.coords;
               resolve({ latitude, longitude });
             },
             (error) => {
-              reject(new Error("Error fetching location: " + error.message));
+              let errorMessage = "";
+              switch (error.code) {
+                case error.PERMISSION_DENIED:
+                  errorMessage = "User denied the request for Geolocation.";
+                  break;
+                case error.POSITION_UNAVAILABLE:
+                  errorMessage = "Location information is unavailable.";
+                  break;
+                case error.TIMEOUT:
+                  errorMessage = "The request to get user location timed out.";
+                  break;
+                case error.UNKNOWN_ERROR:
+                default:
+                  errorMessage = "An unknown error occurred.";
+                  break;
+              }
+              reject(new Error(`Error fetching location: ${errorMessage}`));
             },
             {
               enableHighAccuracy: true,
@@ -156,24 +197,30 @@ export default function DeliveryPartnerHome() {
 
     const handleToggle = async () => {
       try {
-        const coords = await getLiveLocation();
-        console.log(coords);
-        //         {
-        //     "latitude": 23.3972257,
-        //     "longitude": 85.3685138
-        // }
-        setLocationHistory((prevHistory) => ({ ...prevHistory, ...coords })); // Append new location
-        setLocationPermissionGranted(true);
-        const response = await FetchData(
-          `driver/toggle-active-driver/${user[0]?._id}`,
-          "post",
-          { coordinates: [coords.longitude, coords.latitude] }
-        );
-        console.log(response);
-        console.log("Toggle state & locations sent successfully", {
-          coords,
-        });
-        setIsActive(!isActive);
+        await getLiveLocation()
+          .then(async (location) => {
+            console.log("User Location:", location);
+
+            setLocationHistory((prevHistory) => ({
+              ...prevHistory,
+              ...location,
+            })); // Append new location
+            setLocationPermissionGranted(true);
+            const response = await FetchData(
+              `driver/toggle-active-driver/${user[0]?._id}`,
+              "post",
+              { coordinates: [location.longitude, location.latitude] }
+            )
+              .then((response) => {
+                console.log("Location Set successfully:", response);
+                console.log("Toggle state & locations sent successfully", {
+                  location,
+                });
+                setIsActive(!isActive);
+              })
+              .catch((error) => console.error("error in fetching:", error));
+          })
+          .catch((error) => console.error(error.message));
       } catch (error) {
         console.error(error);
       }

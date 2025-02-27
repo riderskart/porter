@@ -8,6 +8,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { NotificationStructure } from "../utils/NotificationClass.js";
 import { io } from "../app.js";
+import { FindNearbyDrivers } from "./Order.controller.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -187,6 +188,11 @@ const LoginDriver = asyncHandler(async (req, res) => {
     user.isActive = true;
     await user.save();
   }
+
+  const allDrivers = await FindNearbyDrivers([
+    85.2296078343398, 23.413762657292978,
+  ]);
+  console.log("From Login page:", allDrivers);
 
   const options = {
     httpOnly: true,
@@ -438,6 +444,7 @@ const ToggleActiveDriver = asyncHandler(async (req, res) => {
   if (!driver) throw new ApiError(404, "Driver not found");
 
   if (driver.verificationStatus === DriverVerificationStatus[2]) {
+    console.log("Driver Active status: ",driver.isActive); 
     driver.isActive = !driver.isActive;
     await driver.save();
 
