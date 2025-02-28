@@ -125,10 +125,9 @@ const CreateOrder = asyncHandler(async (req, res) => {
           sender.pickupCoordinates.long,
           sender.pickupCoordinates.lat,
         ],
-        // lat: sender.pickupCoordinates.lat,
-        // long: sender.pickupCoordinates.long,
       },
-      houseAddress: sender.senderHouseNumber || null,
+      houseNo: sender.senderHouseNumber || null,
+      address: sender.senderAddress,
     },
     receiver: {
       name: receiver.receiverName,
@@ -143,7 +142,8 @@ const CreateOrder = asyncHandler(async (req, res) => {
           receiver.dropCoordinates.lat,
         ],
       },
-      houseAddress: receiver.receiverHouseNumber || null,
+      houseNo: receiver.receiverHouseNumber || null,
+      address: receiver.receiverAddress,
     },
     vehicle,
     productDetails: {
