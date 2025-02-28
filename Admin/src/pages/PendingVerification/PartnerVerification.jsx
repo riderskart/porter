@@ -38,7 +38,7 @@ const PartnerVerification = () => {
       );
       console.log(response);
       alertSuccess("Partner Verified Successfully");
-      navigate("/home/VerifiedDeliveryPartner");
+      navigate("/home/All_Orders");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -53,7 +53,7 @@ const PartnerVerification = () => {
       );
       console.log(response);
       alertSuccess("Partner Rejected Successfully");
-      navigate("/home/DeliveryPartner");
+      navigate("/home/All_Orders");
     } catch (error) {
       console.error("Error:", error);
     }

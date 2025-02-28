@@ -13,7 +13,10 @@ const Home2 = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [offerFilter, setOfferFilter] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [showOfferForm, setShowOfferForm] = useState(false);
+  const [vehicleFilter, setVehicleFilter] = useState("")
 
   const user = useSelector((store) => store.UserInfo.user);
 
@@ -79,7 +82,8 @@ const Home2 = () => {
     const ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12 || 12;
     hours = String(hours).padStart(2, "0");
-    return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
+    return `${day}-${month}-${year}`;
+    // return `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`;
   }
 
   useEffect(() => {
@@ -95,7 +99,7 @@ const Home2 = () => {
           All_Orders: {
             ...prevSections.All_Orders,
             tableData: data.map((order, i) => ({
-              Index: i + 1,
+              Sl_No: i + 1,
               BookingId: order._id,
               field: "orders",
               User_id: order.user,
@@ -121,7 +125,7 @@ const Home2 = () => {
           Users: {
             ...prevSections.Users,
             tableData: data.map((user, i) => ({
-              Index: i + 1,
+              Sl_No: i + 1,
               UserId: user._id,
               field: "users",
               Name: user.name,
@@ -149,7 +153,7 @@ const Home2 = () => {
           DeliveryPartner: {
             ...prevSections.DeliveryPartner,
             tableData: data.map((partner, i) => ({
-              Index: i + 1,
+              Sl_No: i + 1,
               RequestId: partner._id,
               field: "pendingRequests",
               Name: partner.name,
@@ -178,7 +182,7 @@ const Home2 = () => {
           VerifiedDeliveryPartner: {
             ...prevSections.VerifiedDeliveryPartner,
             tableData: data.map((partner, i) => ({
-              Index: i + 1,
+              Sl_No: i + 1,
               PartnerId: partner._id,
               field: "verifiedPartners",
               Name: partner.name,
@@ -207,18 +211,37 @@ const Home2 = () => {
 
       const matchesStatusFilter =
         selectedSection === "All_Orders" && statusFilter
-          ? row.Status?.toLowerCase().includes(statusFilter.toLowerCase())
+          ? row.Status?.toLowerCase() === statusFilter.toLowerCase()
           : true;
 
       const matchesOfferFilter =
-        selectedSection === "All_Orders" && offerFilter === "offer"
-          ? row.allOrders >= 10 &&
-            new Date() - new Date(row.Date) <= 10 * 24 * 60 * 60 * 1000
+        selectedSection === "Users" && offerFilter === "offer"
+          ? row.allOrders >= 10
           : true;
 
-      return matchesSearchQuery && matchesStatusFilter && matchesOfferFilter;
+      const matchesDateFilter =
+        startDate && endDate
+          ? new Date(row.Date?.split("-").reverse().join("-")) >=
+              new Date(startDate) &&
+            new Date(row.Date?.split("-").reverse().join("-")) <=
+              new Date(endDate)
+          : true;
+
+      const matchesVehicleFilter =
+        selectedSection === "VerifiedDeliveryPartner" && vehicleFilter
+          ? row.vehicleType?.toLowerCase() === vehicleFilter.toLowerCase()
+          : true;
+
+      return (
+        matchesSearchQuery &&
+        matchesStatusFilter &&
+        matchesOfferFilter &&
+        matchesDateFilter &&
+        matchesVehicleFilter
+      );
     }
   );
+
 
   const extractUserIds = (filteredData) => {
     // Use a Set to avoid duplicate user IDs
@@ -230,9 +253,6 @@ const Home2 = () => {
     // Convert Set back to Array if required
     return Array.from(userIds);
   };
-
-  console.log("sections:", sections);
-  // console.log(OfferFilteredData);
 
   return (
     <div>
@@ -251,7 +271,7 @@ const Home2 = () => {
       </header>
 
       <div className="flex">
-        <aside className="w-1/4 h-screen fixed overflow-hidden bg-gray-100 text-gray-800 p-6 shadow-lg">
+        <aside className="w-fit h-screen fixed overflow-hidden bg-gray-100 text-gray-800 p-6 shadow-lg">
           <h2 className="text-2xl mb-8 font-bold">Dashboard</h2>
           <nav>
             <ul className="space-y-4">
@@ -273,7 +293,7 @@ const Home2 = () => {
           </nav>
         </aside>
 
-        <main className="flex-1 p-10 overflow-y-hidden pl-96 mt-20 ml-10">
+        <main className="flex-1 p-10 overflow-y-hidden pl-80 mt-20">
           {sections[selectedSection] && (
             <section>
               <div className="grid grid-cols-2 grid-rows-2 gap-4">
@@ -292,15 +312,17 @@ const Home2 = () => {
 
               {selectedSection === "All_Orders" && (
                 <div className="mb-4">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by Booking ID or Contact Number"
-                    className="p-2 border border-gray-300 rounded-lg w-full mb-2"
-                  />
+                  <div className="input_for_search">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search by Booking ID or Contact Number"
+                      className="p-2 border border-gray-300 rounded-lg w-full mb-2"
+                    />
+                  </div>
 
-                  <div>
+                  <div className="Filter_by_Status">
                     <label htmlFor="statusFilter" className="mr-2">
                       Filter by Status:
                     </label>
@@ -318,7 +340,7 @@ const Home2 = () => {
                     </select>
                   </div>
 
-                  <div className="mt-4">
+                  <div className="offer_filter_and_button mt-4">
                     <label htmlFor="offerFilter" className="mr-2">
                       Filter by Offers:
                     </label>
@@ -334,13 +356,128 @@ const Home2 = () => {
                         Eligible Users for Offer
                       </option>
                     </select>
+                    <button
+                      className="mx-5 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                      onClick={() => setShowOfferForm(true)}
+                    >
+                      Generate Offer
+                    </button>
                   </div>
-                  <button
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                    onClick={() => setShowOfferForm(true)}
-                  >
-                    Generate Offer
-                  </button>
+
+                  <div className="Filter_by_DateRange flex items-center gap-2 mt-5">
+                    <label className="mr-2">Filter by Date:</label>
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="p-2 border border-gray-300 rounded-lg"
+                    />
+                    <span>to</span>
+                    <input
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="p-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+                </div>
+              )}
+              {selectedSection === "Users" && (
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by User ID or Email"
+                    className="p-2 border border-gray-300 rounded-lg w-full mb-2"
+                  />
+
+                  <div className="offer_filter_and_button mt-4">
+                    <label htmlFor="offerFilter" className="mr-2">
+                      Filter by Offers:
+                    </label>
+                    <select
+                      id="offerFilter"
+                      value={offerFilter}
+                      onChange={(e) => setOfferFilter(e.target.value)}
+                      className="p-2 border border-gray-300 rounded-lg"
+                    >
+                      <option value="">All</option>
+                      <option value="offer">
+                        {/* Offers (Orders ≥ 10 & Days ≤ 10) */}
+                        Eligible Users for Offer
+                      </option>
+                    </select>
+                    <button
+                      className="mx-5 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                      onClick={() => setShowOfferForm(true)}
+                    >
+                      Generate Offer
+                    </button>
+                  </div>
+                </div>
+              )}
+              {selectedSection === "DeliveryPartner" && (
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by User ID or Email"
+                    className="p-2 border border-gray-300 rounded-lg w-full mb-2"
+                  />
+                </div>
+              )}
+              {selectedSection === "VerifiedDeliveryPartner" && (
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by User ID or Email"
+                    className="p-2 border border-gray-300 rounded-lg w-full mb-2"
+                  />
+
+                  <div className="offer_filter_and_button mt-4">
+                    <label htmlFor="offerFilter" className="mr-2">
+                      Filter by Offers:
+                    </label>
+                    <select
+                      id="offerFilter"
+                      value={offerFilter}
+                      onChange={(e) => setOfferFilter(e.target.value)}
+                      className="p-2 border border-gray-300 rounded-lg"
+                    >
+                      <option value="">All</option>
+                      <option value="offer">
+                        {/* Offers (Orders ≥ 10 & Days ≤ 10) */}
+                        Eligible Users for Offer
+                      </option>
+                    </select>
+                    <button
+                      className="mx-5 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                      onClick={() => setShowOfferForm(true)}
+                    >
+                      Generate Offer
+                    </button>
+                  </div>
+                  <div className="Filter_by_Status mt-4 ">
+                    <label htmlFor="statusFilter" className="mr-2">
+                      Filter by vehicle type:
+                    </label>
+                    <select
+                      id="statusFilter"
+                      value={vehicleFilter}
+                      onChange={(e) => setVehicleFilter(e.target.value)}
+                      className="p-2 border border-gray-300 rounded-lg"
+                    >
+                      <option value="">All</option>
+                      <option value="created">Bike</option>
+                      <option value="in-progress">Electric Bike</option>
+                      <option value="cancelled">Truck</option>
+                      <option value="cancelled">Scooty</option>
+                    </select>
+                  </div>
                 </div>
               )}
 
@@ -368,21 +505,28 @@ const Home2 = () => {
                       {Object.values(row).map((cell, i) => (
                         <td
                           key={i}
-                          className="px-4 py-2 border border-gray-300 text-center"
+                          className="px-1 py-1 border border-gray-300 text-center "
                         >
                           {selectedSection === "All_Orders" && (
-                            <Link to={`/current-order/${row.BookingId}`}>
+                            <Link
+                              to={`/current-order/${row.BookingId}`}
+                              className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
+                            >
                               {cell}
                             </Link>
                           )}
                           {selectedSection === "Users" && (
-                            <Link to={`/current-user/${row.UserId}`}>
+                            <Link
+                              to={`/current-user/${row.UserId}`}
+                              className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
+                            >
                               {cell}
                             </Link>
                           )}
                           {selectedSection === "DeliveryPartner" && (
                             <Link
                               to={`/current-pending-request/${row.RequestId}`}
+                              className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
                             >
                               {cell}
                             </Link>
@@ -390,6 +534,7 @@ const Home2 = () => {
                           {selectedSection === "VerifiedDeliveryPartner" && (
                             <Link
                               to={`/current-verified-partner/${row.PartnerId}`}
+                              className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
                             >
                               {cell}
                             </Link>
