@@ -110,9 +110,9 @@ const Booking_And_services = () => {
   }
 
   // Example usage
-  getAddressFromCoordinates(23.3971922, 85.3723552)
-    .then((address) => console.log("Address:", address))
-    .catch((error) => console.error(error));
+  // getAddressFromCoordinates(23.3971922, 85.3723552)
+  //   .then((address) => console.log("Address:", address))
+  //   .catch((error) => console.error(error));
 
   const PopupButton = () => {
     const [isOpen, setIsOpen] = useState(false);
