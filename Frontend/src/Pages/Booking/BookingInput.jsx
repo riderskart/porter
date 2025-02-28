@@ -1,11 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin,
-  ChevronLeft,
   ChevronRight,
-  ChevronDown,
-  ChevronUp,
   CircleCheck,
   Circle,
   IndianRupee,
@@ -29,20 +26,23 @@ const formSections = [
   "Review Page",
 ];
 
-export default function BookingInput() {
+export default function BookingInput({ userAddress, userCords }) {
   // variables
   const [currentSection, setCurrentSection] = useState(0);
   const [direction, setDirection] = useState(0);
   const [selectedPartner, setSelectedPartner] = useState(0);
   const [vehicleType, setVehicleType] = useState("");
-  //  const [productType, setProductType] = useState("");
   const formRef = useRef(null);
+  const Navigate = useNavigate();
+
+  // console.log("From Input:", userCords, userAddress);
+
   const [sender, setSender] = useState({
     senderName: "",
-    senderAddress: "Kathitand",
+    senderAddress: "hii",
     pickupCoordinates: {
-      lat: 23.412493937013437,
-      long: 85.22944063510043,
+      lat: null,
+      long: null,
     },
     senderNumber: Number,
     senderEmail: "",
@@ -51,10 +51,10 @@ export default function BookingInput() {
 
   const [receiver, setReceiver] = useState({
     receiverName: "",
-    receiverAddress: "Lalpur",
+    receiverAddress: "",
     dropCoordinates: {
-      lat: 23.378967662926954,
-      long: 85.31496329095134,
+      lat: null,
+      long: null,
     },
     receiverPhone: Number,
     receiverEmail: "",
@@ -127,7 +127,6 @@ export default function BookingInput() {
       opacity: 0,
     }),
   };
-  const Navigate = useNavigate();
 
   const HandleAllOrders = () => {
     Navigate("/all-orders");
@@ -164,6 +163,28 @@ export default function BookingInput() {
     }
   };
 
+  const updateReceiverDetails = (newAddress, newCoordinates) => {
+    setSender((prev) => ({
+      ...prev,
+      receiverAddress: newAddress,
+      dropCoordinates: {
+        lat: newCoordinates.lat,
+        long: newCoordinates.lng,
+      },
+    }));
+  };
+
+  const updateSenderDetails = (newAddress, newCoordinates) => {
+    setSender((prev) => ({
+      ...prev,
+      senderAddress: newAddress,
+      pickupCoordinates: {
+        lat: newCoordinates.lat,
+        long: newCoordinates.lng,
+      },
+    }));
+  };
+
   // UI for Different forms
   function SenderDetails() {
     return (
@@ -174,7 +195,9 @@ export default function BookingInput() {
           <div className="flex items-center text-sm text-gray-600">
             <MapPin className="w-4 h-4 mr-1" />
             <span>{sender.senderAddress}</span>
-            <button className="ml-2 text-blue-500 hover:underline">Edit</button>
+            <button className="ml-2 text-blue-500 hover:underline laptop:hidden">
+              Edit
+            </button>
           </div>
         </div>
 
@@ -207,7 +230,7 @@ export default function BookingInput() {
             />
           </div>
           <div>
-            <Label htmlFor="senderHouseNumber">Sender's Address</Label>
+            <Label htmlFor="senderHouseNumber">Sender's House</Label>
             <Input
               id="senderHouseNumber"
               placeholder="Please enter"
@@ -228,7 +251,9 @@ export default function BookingInput() {
           <div className="flex items-center text-sm text-gray-600">
             <MapPin className="w-4 h-4 mr-1" />
             <span>{receiver.receiverAddress}</span>
-            <button className="ml-2 text-blue-500 hover:underline">Edit</button>
+            <button className="ml-2 text-blue-500 hover:underline laptop:hidden">
+              Edit
+            </button>
           </div>
         </div>
 
@@ -261,7 +286,7 @@ export default function BookingInput() {
             />
           </div>
           <div>
-            <Label htmlFor="recieverHouseNumber">Receiver's Address</Label>
+            <Label htmlFor="recieverHouseNumber">Receiver's House</Label>
             <Input
               id="receiverHouseNumber"
               placeholder="Full Address"
@@ -561,7 +586,7 @@ export default function BookingInput() {
             <div className="flex flex-col">
               <div className="flex flex-col gap-2">
                 <h3 className="text-lg ">
-                  Type of Parcel: {itemDetails.productType} 
+                  Type of Parcel: {itemDetails.productType}
                 </h3>
                 <h3>weight: {itemDetails.productWeight} kg</h3>
               </div>
@@ -659,6 +684,21 @@ export default function BookingInput() {
       </div>
     );
   }
+
+  // Update the sender's and receiver's details when the user address changes
+  useEffect(() => {
+    function updateAddress() {
+      console.log("Updating Address", currentSection, userAddress, userCords);
+
+      if (currentSection === 0) {
+        updateSenderDetails(userAddress, userCords);
+      } else if (currentSection === 1) {
+        updateReceiverDetails(userAddress, userCords);
+      }
+    }
+
+    updateAddress();
+  }, [userAddress, userCords, currentSection]);
 
   return (
     <div id="Booking_Input" className=" w-full phone:h-fit   ">

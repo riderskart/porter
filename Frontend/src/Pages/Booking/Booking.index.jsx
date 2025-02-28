@@ -76,7 +76,6 @@ const Booking = () => {
           const position = newMarker.getPosition();
           const newLocation = { lat: position.lat(), lng: position.lng() };
           setLocation(newLocation);
-          sendLocationToBackend(newLocation);
 
           geocoder.geocode({ location: newLocation }, (results, status) => {
             if (status === "OK" && results[0]) {
@@ -92,7 +91,6 @@ const Booking = () => {
           };
           setLocation(clickedLocation);
           newMarker.setPosition(clickedLocation);
-          sendLocationToBackend(clickedLocation);
 
           geocoder.geocode({ location: clickedLocation }, (results, status) => {
             if (status === "OK" && results[0]) {
@@ -120,7 +118,6 @@ const Booking = () => {
             };
             setLocation(newPosition);
             setAddress(place.formatted_address);
-            sendLocationToBackend(newPosition);
 
             newMarker.setPosition(newPosition);
             newMap.setCenter(newPosition);
@@ -131,54 +128,46 @@ const Booking = () => {
       loadGoogleMaps();
     }, []);
 
-    const sendLocationToBackend = async (location) => {
-      try {
-        const response = await FetchData("update-user-address", "post", {
-          latitude: location.lat,
-          longitude: location.lng,
-        });
-        console.log(response);
-        alertSuccess("Location set successfully");
-      } catch (error) {
-        console.error("Error sending location:", error);
-      }
-    };
-
     return (
-      <div className="flex flex-row w-full h-screen bg-[#FFFFFF]">
-        <div
-          ref={mapRef}
-          className="main_map w-full h-[500px] rounded-md shadow-lg bg-[#D5D5D7]"
-        ></div>
+      <div>
+        <div className="Map w-full  phone:h-[30vh] tablet:h-[27vh] laptop:h-[60vh] phone:hidden laptop:block">
+          <div className="flex flex-row w-full h-screen bg-[#FFFFFF]">
+            <div
+              ref={mapRef}
+              className="main_map w-full h-[500px] rounded-md shadow-lg bg-[#D5D5D7]"
+            ></div>
 
-        <div className="absolute backdrop-blur-lg right-0 top-32 h-fit py-10 px-5 rounded-xl">
-          <input
-            ref={inputRef}
-            type="text"
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Search for a location..."
-          />
-          {/* Display selected address */}
-          <input
-            type="text"
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm mt-2 bg-gray-100"
-            value={address}
-            readOnly
-          />
-          {console.log(location.lat)}
-          {console.log(location.lng)}
+            {/* Map UI */}
+            <div className="absolute backdrop-blur-lg right-0 top-32 h-fit py-10 px-5 rounded-xl">
+              <input
+                ref={inputRef}
+                type="text"
+                className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Search for a location..."
+              />
+              {/* Display selected address */}
+              <input
+                type="text"
+                className="w-full p-2 border border-gray-300 rounded-md shadow-sm mt-2 bg-gray-100"
+                value={address}
+                readOnly
+              />
+            </div>
+          </div>
         </div>
+          {/* Booking Input UI */}
+          <BookingInput userAddress={address} userCords={location} />
       </div>
     );
   };
 
   return (
     <div>
-      <div className="Map w-full  phone:h-[30vh] tablet:h-[27vh] laptop:h-[60vh] phone:hidden laptop:block">
-        {/* <img src={MapImg} alt="" className="h-full w-full" /> */}
+      <MapInput />
+      {/* <div className="Map w-full  phone:h-[30vh] tablet:h-[27vh] laptop:h-[60vh] phone:hidden laptop:block">
         <MapInput />
       </div>
-      <BookingInput />
+      <BookingInput /> */}
     </div>
   );
 };
