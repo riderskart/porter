@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ButtonWrapper from "../../Components/Buttons";
 import Card from "../../Components/Card";
 import { Loader, User } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Lottie from "lottie-react";
 import Loading from "../../assets/Loading/Loading.json";
 import { FetchData } from "../../utility/fetchFromAPI";
@@ -23,7 +23,6 @@ const UserProfile = () => {
     async function fetchUserData(userId) {
       const User = await FetchData(
         `user/get-user-details/${userId}`,
-        // `user/get-user-details/${user?.[0]?._id}`,
         "get"
       );
       console.log(User);
@@ -114,7 +113,7 @@ const UserProfile = () => {
         {filteredOrders?.map((order, index) => (
           <div key={order._id} className="p-4 border-b border-gray-200 w-full">
             <h1 className="font-semibold">Order {index + 1}</h1>
-            <h2>ID: {order._id}</h2>
+            <Link to={`/current-order/${order._id}`}>ID: {order._id}</Link>
           </div>
         ))}
       </Card>
