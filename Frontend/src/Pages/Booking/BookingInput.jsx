@@ -164,7 +164,7 @@ export default function BookingInput({ userAddress, userCords }) {
   };
 
   const updateReceiverDetails = (newAddress, newCoordinates) => {
-    setSender((prev) => ({
+    setReceiver((prev) => ({
       ...prev,
       receiverAddress: newAddress,
       dropCoordinates: {
@@ -692,7 +692,7 @@ export default function BookingInput({ userAddress, userCords }) {
 
       if (currentSection === 0) {
         updateSenderDetails(userAddress, userCords);
-      } else if (currentSection === 1) {
+      } else if (currentSection > 0 ) {
         updateReceiverDetails(userAddress, userCords);
       }
     }
