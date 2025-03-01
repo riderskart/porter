@@ -189,11 +189,6 @@ const LoginDriver = asyncHandler(async (req, res) => {
     await user.save();
   }
 
-  const allDrivers = await FindNearbyDrivers([
-    85.2296078343398, 23.413762657292978,
-  ]);
-  console.log("From Login page:", allDrivers);
-
   const options = {
     httpOnly: true,
     secure: true,

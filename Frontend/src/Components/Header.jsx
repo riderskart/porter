@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../utility/Slice/UserInfoSlice";
 import { alertInfo } from "../utility/Alert";
 import { motion } from "framer-motion";
+import socket from "../socket";
 
 const Header = () => {
   // constants
@@ -96,6 +97,7 @@ const Header = () => {
                   onClick={() => {
                     dispatch(clearUser());
                     alert("You are logged out! Please log in");
+                    socket.disconnect();
                     onClose();
                     navigate("/login");
                     localStorage.clear();
@@ -214,6 +216,7 @@ const Header = () => {
             <ButtonWrapper
               onClick={() => {
                 Dispatch(clearUser());
+                socket.disconnect();
                 navigate("/login");
                 alertInfo("you are logged Out! Please log in");
                 localStorage.clear();

@@ -9,27 +9,30 @@ import { io } from "../app.js";
 import { NotificationStructure } from "../utils/NotificationClass.js";
 
 export const FindNearbyDrivers = async (Coordinates, Radius = 5000) => {
-  // Coordinates = [longitude, latitude]
+  // Coordinates should be [longitude, latitude]
+  console.log("Searching drivers near:", Coordinates);
+  console.log("Radius:", Radius);
 
-  console.log(Coordinates);
-  const drivers = await DeliveryPartner.find({
-    location: {
-      $near: {
-        $geometry: {
-          type: "Point",
-          coordinates: Coordinates, // [longitude, latitude]
+  try {
+    const drivers = await DeliveryPartner.find({
+      currentLocation: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: Coordinates, // [longitude, latitude]
+          },
+          $maxDistance: Radius, // 5 km in meters
         },
-        $maxDistance: Radius, // 5 km in meters
       },
-    },
-    isAvailable: true,
-  }).then((drivers) => {
-    console.log(drivers);
+      isAvailable: true,
+    });
     return drivers;
-  });
-
-  return drivers;
+  } catch (error) {
+    console.error("Error finding drivers:", error);
+    return [];
+  }
 };
+
 
 const PushNotification = async (allDrivers, createdOrder) => {
   allDrivers.map(async (driver, index) => {
@@ -39,8 +42,8 @@ const PushNotification = async (allDrivers, createdOrder) => {
 
     await driver.populate("allAppointments");
 
-    io.to(`${driver._id}`).emit(
-      "newOrder",
+    io.to(`${driver.socketId}`).emit(
+      "order:new",
       new NotificationStructure(
         "New Order",
         `${createdOrder.sender?.name} has initiated a new order. Want to have a look?`,

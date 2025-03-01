@@ -4,6 +4,7 @@ import cors from "cors";
 import ImageKit from "imagekit";
 import http from "http";
 import { Server as SocketIOServer } from "socket.io";
+import socketSetup from "../src/db/socket.js";
 
 const allowedOrigins = [
   process.env.ORIGIN_1,
@@ -19,6 +20,12 @@ const io = new SocketIOServer(server, {
   cors: {
     origin: allowedOrigins,
     credentials: true,
+  },
+  connectionStateRecovery: {
+    // the backup duration of the sessions and the packets
+    maxDisconnectionDuration: 2 * 60 * 1000,
+    // whether to skip middlewares upon successful recovery
+    skipMiddlewares: true,
   },
 });
 
@@ -45,27 +52,7 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 // ** Socket.IO Connection Handling **
-io.on("connection", (socket) => {
-  console.log(`User connected: ${socket.id}`);
-
-  socket.on("DriversRoom", (driverId) => {
-    if (driverId) {
-      socket.join(driverId);
-      console.log(`Driver ${driverId} joined their room`);
-    }
-  });
-
-  socket.on("UsersRoom", (userId) => {
-    if (userId) {
-      socket.join(userId);
-      console.log(`User ${userId} joined their room`);
-    }
-  });
-
-  socket.on("disconnect", () => {
-    console.log(`User disconnected: ${socket.id}`);
-  });
-});
+socketSetup(io);
 
 app.use((req, res, next) => {
   console.log("Request Body: ", req.body);
