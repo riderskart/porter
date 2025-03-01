@@ -22,15 +22,15 @@ import { addUser, clearUser } from "./utility/Slice/UserInfoSlice";
 import { addAllAppointment } from "./utility/Slice/AllAppointmentsSlice";
 import { parseErrorMessage } from "./utility/ErrorMessageParser";
 import { alertError, alertSuccess } from "./utility/Alert";
-import { io } from "socket.io-client";
-
+import socket from "./socket";
 
 const App = () => {
-  const socketRef = useRef(null);
   const Dispatch = useDispatch();
   const [notifications, setNotifications] = useState([]);
   // Re-logging in after refreshing the page
   useEffect(() => {
+    
+
     async function reLogin() {
       const RefreshToken = localStorage.getItem("RefreshToken");
       if (!RefreshToken) return;
@@ -67,8 +67,8 @@ const App = () => {
                 personal: true,
               })
             );
+            socket.emit("joinUsersRoom", User.data.data.user._id);
           }
-          return User;
         } catch (error) {
           console.log(error);
           alertError(parseErrorMessage(error));
@@ -102,8 +102,8 @@ const App = () => {
               })
             );
             Dispatch(addAllAppointment(User.data.data.user.allAppointments));
+            socket.emit("joinDriversRoom", User.data.data.user._id);
           }
-          return User;
         } catch (error) {
           console.log(error);
           // alertError(parseErrorMessage(error));
@@ -113,42 +113,6 @@ const App = () => {
 
     reLogin();
   }, []);
-
-  // Socket connection
-  useEffect(() => {
-    if (!socketRef.current) {
-      socketRef.current = io(process.env.DomainUrl, {
-        withCredentials: true, // ✅ Ensures cross-origin cookies and headers work
-        transports: ["websocket"], // ✅ Forces WebSocket instead of polling (better for performance)
-      });
-
-      socketRef.current.on("newOrder", (notification) => {
-        console.log("New order received:", notification);
-        setNotifications((prev) => [...prev, notification]);
-      });
-
-      socketRef.current.on("connect", () => {
-        console.log("Connected with socket ID:", socketRef.current.id);
-      });
-
-      socketRef.current.on("disconnect", () => {
-        console.log("Disconnected from socket");
-      });
-    }
-
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (notifications.length > 0) {
-      alertSuccess(notifications[notifications.length - 1]?.title);
-    }
-  }, [notifications]);
 
   return (
     <div className="bg-[#D5D5D7] overflow-hidden font-Fredoka">

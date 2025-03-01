@@ -1,13 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import ButtonWrapper from "../../Components/Buttons";
-import {
-  Bike,
-  ChevronRight,
-  Eye,
-  EyeOff,
-  User,
-} from "lucide-react";
+import { Bike, ChevronRight, Eye, EyeOff, User } from "lucide-react";
 import { FetchData } from "../../utility/fetchFromAPI";
 import { useDispatch } from "react-redux";
 import { alertError, alertSuccess } from "../../utility/Alert";
@@ -76,7 +70,7 @@ const LogIn = () => {
           })
         );
         localStorage.setItem("user", "personal");
-        console.log("New custom obj added successfully");
+        socket.emit("joinUsersRoom", response.data.data.user._id);
       } else {
         navigate("/drivers-home");
         Dispatch(
@@ -86,6 +80,8 @@ const LogIn = () => {
           })
         );
         localStorage.setItem("user", "driver");
+        socket.emit("joinDriversRoom", response.data.data.user._id);
+
         console.log("New custom obj added successfully");
       }
 
