@@ -8,14 +8,12 @@ import {
   IndianRupee,
   Component,
   X,
-  Link,
 } from "lucide-react";
 import Input from "../../Components/Input";
 import Label from "../../Components/Label";
 import ButtonWrapper from "../../Components/Buttons";
 import { AvailableDeliveryPartner } from "../../Constants/BookingConstants";
-import { alertError, alertSuccess } from "../../utility/Alert";
-import { parseErrorMessage } from "../../utility/ErrorMessageParser";
+import { alertSuccess } from "../../utility/Alert";
 import { FetchData } from "../../utility/fetchFromAPI";
 import { useNavigate } from "react-router-dom";
 import BackgroundImage from "../../assets/Booking/BookingBackground.jpg";
@@ -35,21 +33,22 @@ export default function BookingInput({ userAddress, userCords }) {
   const [selectedPartner, setSelectedPartner] = useState(0);
   const [vehicleType, setVehicleType] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [currentLocation, setCurrentLocation] = useState({
-    coords: { lat: 28.681199800800137, lng: 77.2224575871163 }, // delhi lat, lng.
-    address: "",
-  });
+
   const formRef = useRef(null);
   const Navigate = useNavigate();
 
   const [address, setAddress] = useState("");
+  const [location, setLocation] = useState({
+    lat: 28.681199800800137,
+    lng: 77.2224575871163,
+  }); // (Delhi, India)
   const MapInput = () => {
     const [map, setMap] = useState(null);
     const [marker, setMarker] = useState(null);
-    const [location, setLocation] = useState({
-      lat: 28.681199800800137,
-      lng: 77.2224575871163,
-    }); // (Delhi, India)
+    // const [location, setLocation] = useState({
+    //   lat: 28.681199800800137,
+    //   lng: 77.2224575871163,
+    // }); // (Delhi, India)
     const mapRef = useRef(null);
     const inputRef = useRef(null);
 
@@ -79,7 +78,7 @@ export default function BookingInput({ userAddress, userCords }) {
               initializeMap(userLocation); // map with user's location
             },
             () => {
-              initializeMap(location); // default location if locationpermission is denied
+              initializeMap(location); // default location if location permission is denied
             }
           );
         } else {
@@ -361,14 +360,39 @@ export default function BookingInput({ userAddress, userCords }) {
             </span>
             <span className="phone:block laptop:hidden">{address}</span>
             <span className="phone:hidden laptop:block">{sender.address}</span>
-            <button className="ml-2 text-blue-500 hover:underline laptop:hidden">
-              Edit
-            </button>
           </div>
         </div>
 
         {/* Form */}
         <div className="grid laptop:grid-cols-4 phone:grid-cols-1 tablet:grid-cols-2 gap-4">
+          <div className={`laptop:hidden`}>
+            <Label htmlFor="senderHouseNumber">Sender's House</Label>
+            <ButtonWrapper
+              onClick={() => setIsOpen(true)}
+              children={"Select exact location"}
+              className={"w-full mt-4"}
+            />
+
+            {isOpen && (
+              <div className="absolute bg-black bg-opacity-90 backdrop-blur-xl flex justify-start items-start w-screen z-50 h-full flex-col overscroll-auto -top-10 text-white -left-[43px]">
+                {/* Close Button */}
+                <div className="rounded-lg shadow-lg w-full overflow-y-scroll">
+                  <h2 className="text-xl mt-10 mb-4 flex items-center justify-around ">
+                    Select your location
+                    <span>
+                      <button
+                        onClick={() => setIsOpen(false)}
+                        className=" bg-red-600 text-white rounded-lg hover:bg-red-700 transition px-2 py-1"
+                      >
+                        <X />
+                      </button>
+                    </span>{" "}
+                  </h2>
+                  <MapInput />
+                </div>
+              </div>
+            )}
+          </div>
           <div>
             <Label htmlFor="senderName">Sender's Name</Label>
             <Input
@@ -403,8 +427,27 @@ export default function BookingInput({ userAddress, userCords }) {
               name={"senderHouseNumber"}
             />
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  function ReceiverDetails() {
+    return (
+      <div>
+        {/* Form Heading and address */}
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-2xl font-bold">{formSections[currentSection]}</h2>
+          <div className="flex items-center text-sm text-gray-600">
+            <MapPin className="w-4 h-4 mr-1" />
+            <span>{receiver.receiverAddress}</span>
+          </div>
+        </div>
+
+        {/* Form */}
+        <div className="grid laptop:grid-cols-4 phone:grid-cols-1 tablet:grid-cols-2 gap-4">
           <div className={`laptop:hidden`}>
-            <Label htmlFor="senderHouseNumber">Sender's House</Label>
+            <Label htmlFor="senderHouseNumber">Receiver's House</Label>
             <ButtonWrapper
               onClick={() => setIsOpen(true)}
               children={"Select exact location"}
@@ -431,28 +474,6 @@ export default function BookingInput({ userAddress, userCords }) {
               </div>
             )}
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  function ReceiverDetails() {
-    return (
-      <div>
-        {/* Form Heading and address */}
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">{formSections[currentSection]}</h2>
-          <div className="flex items-center text-sm text-gray-600">
-            <MapPin className="w-4 h-4 mr-1" />
-            <span>{receiver.receiverAddress}</span>
-            <button className="ml-2 text-blue-500 hover:underline laptop:hidden">
-              Edit
-            </button>
-          </div>
-        </div>
-
-        {/* Form */}
-        <div className="grid laptop:grid-cols-4 phone:grid-cols-1 tablet:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="receiverName">Receiver's Name</Label>
             <Input
@@ -486,34 +507,6 @@ export default function BookingInput({ userAddress, userCords }) {
               placeholder="Full Address"
               name={"receiverHouseNumber"}
             />
-          </div>
-          <div className={`laptop:hidden`}>
-            <Label htmlFor="senderHouseNumber">Sender's House</Label>
-            <ButtonWrapper
-              onClick={() => setIsOpen(true)}
-              children={"Select exact location"}
-              className={"w-full mt-4"}
-            />
-
-            {isOpen && (
-              <div className="absolute bg-black bg-opacity-90 backdrop-blur-xl flex justify-start items-start w-screen z-50 h-full flex-col overscroll-auto -top-10 text-white -left-[43px]">
-                {/* Close Button */}
-                <div className="rounded-lg shadow-lg w-full overflow-y-scroll">
-                  <h2 className="text-xl mt-10 mb-4 flex items-center justify-around ">
-                    Select your location
-                    <span>
-                      <button
-                        onClick={() => setIsOpen(false)}
-                        className=" bg-red-600 text-white rounded-lg hover:bg-red-700 transition px-2 py-1"
-                      >
-                        <X />
-                      </button>
-                    </span>{" "}
-                  </h2>
-                  <MapInput />
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -912,9 +905,10 @@ export default function BookingInput({ userAddress, userCords }) {
     function updateAddress() {
       console.log("Updating Address", currentSection, userAddress, userCords);
 
+      
       if (currentSection === 0) {
         updateSenderDetails(userAddress, userCords);
-      } else if (currentSection > 0) {
+      } else if (currentSection === 1) {
         updateReceiverDetails(userAddress, userCords);
       }
     }

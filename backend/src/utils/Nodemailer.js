@@ -10,13 +10,13 @@ function SendMail(receivers, subject, text, html) {
       port: 465,
       secure: true, // true for port 465, false for other ports
       auth: {
-        user: process.env.EMAIL, // generated ethereal user
+        user: process.env.SENDER_EMAIL, // generated ethereal user
         pass: process.env.SENDER_APP_PASSWORD, // generated ethereal password
       },
     });
 
     const info = await transporter.sendMail({
-      from: process.env.EMAIL, // sender address
+      from: process.env.SENDER_EMAIL, // sender address
       to: receivers, // list of receivers
       subject: subject, // Subject line
       text: text, // plain text body
