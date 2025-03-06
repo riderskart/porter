@@ -5,6 +5,7 @@ import { OurServices, VehicleData } from "../../Constants/homeConstants";
 import { Link } from "react-router-dom";
 import HomeBackGround from "../../assets/Home/HomeBackground.jpg";
 import ButtonWrapper from "../../Components/Buttons";
+import Ecom from "../../assets/Home/EcomImage.png";
 
 const Booking_And_services = () => {
   // Constants
@@ -130,6 +131,23 @@ const Booking_And_services = () => {
           {VehicleData.map((field, index) => (
             <Vehicle key={index} field={field} />
           ))}
+          <a
+            href="https://darkslategray-oyster-443918.hostingersite.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col justify-center items-center m-2"
+          >
+            <div className="Img laptop:w-28 phone:w-14 bg-primary rounded-lg overflow-hidden drop-shadow-lg hover:drop-shadow-xl p-2">
+              <img
+                src={Ecom}
+                alt=""
+                className="hover:scale-105 transition duration-200 ease-in-out rounded-lg"
+              />
+            </div>
+            <h3 className="name text-center w-24 text-sm mt-2 ">
+              E Commerce Services
+            </h3>
+          </a>
         </div>
         <button
           onClick={openPopup}
@@ -243,6 +261,9 @@ const Booking_And_services = () => {
                   {VehicleData.map((field, index) => (
                     <Vehicle key={index} field={field} />
                   ))}
+                  <div>
+                    
+                  </div>
                 </div>
 
                 {/* Estimation Btn */}
@@ -268,6 +289,23 @@ const Booking_And_services = () => {
                   {VehicleData.map((field, index) => (
                     <Vehicle key={index} field={field} />
                   ))}
+                  <a
+                    href="https://darkslategray-oyster-443918.hostingersite.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col justify-center items-center m-2"
+                  >
+                    <div className="Img laptop:w-28 phone:w-14 bg-primary rounded-lg overflow-hidden drop-shadow-lg hover:drop-shadow-xl p-2">
+                      <img
+                        src={Ecom}
+                        alt=""
+                        className="hover:scale-105 transition duration-200 ease-in-out rounded-lg"
+                      />
+                    </div>
+                    <h3 className="name text-center w-24 text-sm mt-2 ">
+                      E Commerce Services
+                    </h3>
+                  </a>
 
                   {/* Estimation Btn */}
                   <div>

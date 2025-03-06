@@ -30,10 +30,7 @@ export const VehicleData = [
     name: "Affordable House sifting",
     icon: EShiftingImage,
   },
-  {
-    name: "E Commerce Services",
-    icon: EComImage,
-  },
+ 
 ];
 
 export const allVehicle = [
