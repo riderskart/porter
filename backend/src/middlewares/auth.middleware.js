@@ -25,6 +25,10 @@ export const VerifyUser = asyncHandler(async (req, _, next) => {
       throw new ApiError(401, "Invalid Access Token");
     }
 
+    if (user.isBanned) {
+      throw new ApiError(403, "User is Banned from the platform!");
+    }
+
     req.user = user;
     next();
   } catch (error) {

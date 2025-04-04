@@ -5,6 +5,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { io } from "../app.js";
 import SendMail from "../utils/Nodemailer.js";
+import { ApiKey } from "../models/api-key.model.js";
+import { generateApiKey } from "../utils/apiKeyGenerator.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -291,6 +293,69 @@ const DeleteUser = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, "User deleted successfully"));
 });
 
+const RequestForAPIKey = asyncHandler(async (req, res) => {
+  const { expiresAt } = req.body;
+
+  const user = await User.findById(req.user._id);
+
+  if (!user) throw new ApiError(404, "User not found");
+
+  if (expiresAt && new Date(expiresAt) <= new Date())
+    throw new ApiError(400, "Expiration date must be in the future");
+
+  const key = generateApiKey();
+
+  const apiKey = new ApiKey({
+    key,
+    user: user._id,
+    expiresAt,
+  });
+
+  await apiKey.save();
+
+  res
+    .status(201)
+    .json(
+      new ApiResponse(
+        201,
+        {},
+        "A request has been generated for the API key successfully"
+      )
+    );
+});
+
+const GetMyAllAPIKeys = asyncHandler(async (req, res) => {
+  const apiKeys = await ApiKey.find({ user: req.user._id }).populate("user", [
+    "-password",
+    "-refreshToken",
+  ]);
+
+  if (apiKeys.length === 0) {
+    res.status(200).json(new ApiResponse(200, {}, "No API keys found"));
+  }
+
+  res.status(200).json(new ApiResponse(200, apiKeys, "All API keys found"));
+});
+
+const DeactivateMyAPIKey = asyncHandler(async (req, res) => {
+  const { apiKeyId } = req.params;
+
+  if (!apiKeyId) throw new ApiError(400, "API key ID is required");
+
+  const apiKey = await ApiKey.findByIdAndUpdate(apiKeyId, {
+    $set: {
+      isActive: false,
+    },
+    new: true,
+  });
+
+  if (!apiKey) throw new ApiError(404, "API key not found");
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, {}, "API key deactivated successfully"));
+});
+
 export {
   RegisterUser,
   Login,
@@ -301,4 +366,7 @@ export {
   GetUserDetails,
   ToggleBan,
   DeleteUser,
+  RequestForAPIKey,
+  GetMyAllAPIKeys,
+  DeactivateMyAPIKey,
 };

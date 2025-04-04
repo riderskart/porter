@@ -346,6 +346,26 @@ export default function BookingInput({ userAddress, userCords }) {
     }));
   };
 
+  const getDeviceType = () => {
+    const width = window.innerWidth;
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+    if (
+      /mobile|android|iphone|blackberry|opera mini|iemobile/.test(userAgent) ||
+      width < 768
+    ) {
+      return "Mobile";
+    } else if (
+      /tablet|ipad/.test(userAgent) ||
+      (isTouch && width >= 768 && width < 1024)
+    ) {
+      return "Tablet";
+    } else {
+      return "PC";
+    }
+  };
+
   // UI for Different forms
   function SenderDetails() {
     return (
@@ -368,7 +388,10 @@ export default function BookingInput({ userAddress, userCords }) {
           <div className={`laptop:hidden`}>
             <Label htmlFor="senderHouseNumber">Sender's House</Label>
             <ButtonWrapper
-              onClick={() => setIsOpen(true)}
+              onClick={() => {
+                setIsOpen(true);
+                updateSenderDetails(address, location);
+              }}
               children={"Select exact location"}
               className={"w-full mt-4"}
             />
@@ -384,7 +407,7 @@ export default function BookingInput({ userAddress, userCords }) {
                         onClick={() => setIsOpen(false)}
                         className=" bg-red-600 text-white rounded-lg hover:bg-red-700 transition px-2 py-1"
                       >
-                        <X />
+                        Confirm
                       </button>
                     </span>{" "}
                   </h2>
@@ -462,10 +485,13 @@ export default function BookingInput({ userAddress, userCords }) {
                     Select your location
                     <span>
                       <button
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => {
+                          setIsOpen(false);
+                          updateReceiverDetails(address, location);
+                        }}
                         className=" bg-red-600 text-white rounded-lg hover:bg-red-700 transition px-2 py-1"
                       >
-                        <X />
+                        Confirm
                       </button>
                     </span>{" "}
                   </h2>
@@ -903,13 +929,14 @@ export default function BookingInput({ userAddress, userCords }) {
   // Update the sender's and receiver's details when the user address changes
   useEffect(() => {
     function updateAddress() {
-      console.log("Updating Address", currentSection, userAddress, userCords);
+      // console.log("Updating Address", currentSection, userAddress, userCords);
 
-      
-      if (currentSection === 0) {
-        updateSenderDetails(userAddress, userCords);
-      } else if (currentSection === 1) {
-        updateReceiverDetails(userAddress, userCords);
+      if (getDeviceType() === "PC") {
+        if (currentSection === 0) {
+          updateSenderDetails(userAddress, userCords);
+        } else if (currentSection === 1) {
+          updateReceiverDetails(userAddress, userCords);
+        }
       }
     }
 

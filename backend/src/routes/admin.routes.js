@@ -21,10 +21,17 @@ import {
   DeletePartner,
 } from "../controllers/driver.controller.js";
 import { CreateOffer } from "../controllers/Offer.controller.js";
+import {
+  activateApiKey,
+  createApiKey,
+  deactivateApiKey,
+  deleteApiKey,
+  getAllApiKeys,
+} from "../controllers/api-key.controller.js";
 
 const router = Router();
 
-// router.use(VerifyAdmin);
+router.use(VerifyAdmin);
 //---------------- routes for admin only ----------------//
 
 //-----------------Route for admin Login --------------------------------//
@@ -56,5 +63,13 @@ router.route("/driver/delete-partner/:partnerId").delete(DeletePartner);
 
 // Offer routes
 router.route("/offer/create-new-offer").post(CreateOffer);
+
+// API Key routes
+router.route("/api-key/").get(getAllApiKeys).post(createApiKey);
+router
+  .route("/api-key/activity/:id")
+  .post(activateApiKey)
+  .delete(deactivateApiKey);
+router.route("/api-key/delete/:id").delete(deleteApiKey);
 
 export default router;
