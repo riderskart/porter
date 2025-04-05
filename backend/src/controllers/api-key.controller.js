@@ -6,9 +6,12 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createApiKey = asyncHandler(async (req, res) => {
-  const { userId, expiresAt } = req.body;
+  const { userId, expiresAt, type } = req.body;
 
   if (!userId) throw new ApiError(400, "User ID is required");
+  if (!type) throw new ApiError(400, "API key type is required");
+  if (!["testing", "production"].includes(type))
+    throw new ApiError(400, "Invalid API key type");
 
   const user = await User.findById(userId);
 
@@ -25,6 +28,8 @@ const createApiKey = asyncHandler(async (req, res) => {
     key,
     user: userId,
     expiresAt,
+    type,
+    isActive: true,
   });
 
   await apiKey.save();

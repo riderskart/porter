@@ -294,7 +294,11 @@ const DeleteUser = asyncHandler(async (req, res) => {
 });
 
 const RequestForAPIKey = asyncHandler(async (req, res) => {
-  const { expiresAt } = req.body;
+  const { expiresAt, type } = req.body;
+
+  if (!type) throw new ApiError(400, "Type is required");
+  if (type !== "testing" && type !== "production")
+    throw new ApiError(400, "Invalid type");
 
   const user = await User.findById(req.user._id);
 
@@ -309,6 +313,7 @@ const RequestForAPIKey = asyncHandler(async (req, res) => {
     key,
     user: user._id,
     expiresAt,
+    type,
   });
 
   await apiKey.save();
