@@ -19,7 +19,7 @@ const apiKeySchema = new mongoose.Schema(
     expiresAt: Date,
     type: {
       type: String,
-      enum: ["testing", "production"],
+      enum: ["Testing", "Production"],
       required: true,
     },
     requested: {

@@ -23,14 +23,13 @@ import { addAllAppointment } from "./utility/Slice/AllAppointmentsSlice";
 import { parseErrorMessage } from "./utility/ErrorMessageParser";
 import { alertError, alertSuccess } from "./utility/Alert";
 import socket from "./socket";
+import ApiRequests from "./Pages/API_Requests/ApiRequests";
 
 const App = () => {
   const Dispatch = useDispatch();
   const [notifications, setNotifications] = useState([]);
   // Re-logging in after refreshing the page
   useEffect(() => {
-    
-
     async function reLogin() {
       const RefreshToken = localStorage.getItem("RefreshToken");
       if (!RefreshToken) return;
@@ -135,6 +134,7 @@ const App = () => {
           element={<DeliveryPartnerProfile />}
         />
         <Route path="/all-appointments" element={<AllAppointments />} />
+        <Route path="/api-requests/:userId" element={<ApiRequests />} />
 
         {/* {--------------------------------------payment page--------------------------------------} */}
         <Route path="/payment-page" element={<PaymentPage />} />

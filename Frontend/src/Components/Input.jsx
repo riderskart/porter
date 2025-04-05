@@ -5,6 +5,7 @@ export default function Input({
   name,
   value,
   className,
+  minimumDate,
 }) {
   return (
     <div className="Name w-72 m-5">
@@ -16,6 +17,7 @@ export default function Input({
         placeholder={`${placeholder}`}
         name={`${name}`}
         required
+        min={minimumDate} // this is for making sure that the date is not before today
         {...(value && { value })}
       />
     </div>
