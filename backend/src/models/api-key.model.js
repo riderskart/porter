@@ -22,6 +22,11 @@ const apiKeySchema = new mongoose.Schema(
       enum: ["testing", "production"],
       required: true,
     },
+    requested: {
+      type: Boolean,
+      default: true,
+    },
+
     // scopes: [String], // e.g., ['products:read', 'users:read']
     isActive: { type: Boolean, default: true },
   },

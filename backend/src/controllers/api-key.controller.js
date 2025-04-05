@@ -80,6 +80,21 @@ const getAllApiKeys = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, keys, "API keys retrieved successfully"));
 });
 
+const getRequestedAPIs = asyncHandler(async (req, res) => {
+  const apiKey = await ApiKey.find({ requested: true }).populate("user", [
+    "-password",
+    "-refreshToken",
+  ]);
+
+  if (!apiKey) throw new ApiError(404, "API key not found");
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, apiKey, "Requested API key retrieved successfully")
+    );
+});
+
 const deleteApiKey = asyncHandler(async (req, res) => {
   const apiKeyId = req.params.id;
 
@@ -100,4 +115,5 @@ export {
   deactivateApiKey,
   getAllApiKeys,
   deleteApiKey,
+  getRequestedAPIs,
 };

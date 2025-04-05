@@ -27,6 +27,7 @@ import {
   deactivateApiKey,
   deleteApiKey,
   getAllApiKeys,
+  getRequestedAPIs,
 } from "../controllers/api-key.controller.js";
 
 const router = Router();
@@ -66,6 +67,7 @@ router.route("/offer/create-new-offer").post(CreateOffer);
 
 // API Key routes
 router.route("/api-key/").get(getAllApiKeys).post(createApiKey);
+router.route("/api-key/requested").get(getRequestedAPIs);
 router
   .route("/api-key/activity/:id")
   .post(activateApiKey)
