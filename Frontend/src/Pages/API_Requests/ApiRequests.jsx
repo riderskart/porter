@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import BackGround from "../../assets/Home/HomeBackground.jpg";
 import { motion } from "framer-motion";
 import Label from "../../Components/Label";
@@ -13,10 +13,28 @@ import { alertSuccess } from "../../utility/Alert";
 const ApiRequests = () => {
   const user = useSelector((store) => store.UserInfo.user);
   const { userId } = useParams();
-  console.log(userId);
   const formRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(formRef.current);
+
+    try {
+      const response = await FetchData("user/api-key/1234", "post", formData);
+      console.log(response);
+      // alert("A request has been generated for the API key successfully");
+      alertSuccess("A request has been generated for the API key successfully");
+      setIsOpen(false); // Close the form after submission
+      navigate("/");
+    } catch (error) {
+      alert("Error submitting form. Please try again.");
+      console.error("Error submitting form:", error);
+    }
+  };
+
+  // UI elements for the API request form
   const ApiForm = () => {
     const [isDeveloper, setIsDeveloper] = useState(false);
     const [isProduction, setIsProduction] = useState(false);
@@ -202,23 +220,6 @@ const ApiRequests = () => {
     );
   };
 
-  const handleSubmit = async () => {
-    const formData = new FormData(formRef.current);
-
-    try {
-      const response = await FetchData(
-        "user/api-key/:apiKeyId",
-        "post",
-        formData
-      );
-      console.log(response);
-      alert("A request has been generated for the API key successfully");
-    } catch (error) {
-      alert("Error submitting form. Please try again.");
-      console.error("Error submitting form:", error);
-    }
-  };
-
   const TermsAndConditions = () => {
     return (
       <div className="max-w-3xl h-5/6 mx-auto p-6 backdrop-blur-lg rounded-lg shadow-md overflow-y-scroll no-scrollbar">
@@ -280,34 +281,34 @@ const ApiRequests = () => {
                 onSubmit={handleSubmit}
                 className="bg-white px-10 py-10 rounded-lg shadow-lg flex flex-col gap-2 justify-center items-center"
               >
-                <label htmlFor="">Select your purpose</label>
+                <label htmlFor="">Select the expiry date for the API key</label>
                 <Input
                   name={"expiresAt"}
                   type="date"
                   minimumDate={new Date().toISOString().split("T")[0]}
                   className={"w-full"}
                 />
-                <label htmlFor="">Select your purpose</label>
+                <label htmlFor="">Select your API key type</label>
                 <select
                   name={"type"}
                   id=""
                   className="border-gray-900/30 border txt-light-brown text-sm rounded-lg block w-5/6  p-2.5 dark:placeholder-gray-900 dark:text-black drop-shadow-xl focus:outline-none flex justify-center items-center"
                 >
-                  <option value="" disabled selected>
+                  <option value="select" disabled>
                     Select
                   </option>
-                  <option>Testing</option>
-                  <option>Production</option>
+                  <option value={"testing"}>Testing</option>
+                  <option value={"production"}>Production</option>
                 </select>
                 <ButtonWrapper
                   children={"Submit API request"}
                   type="submit"
-                  className={"w-full "}
+                  className={"w-full bg-green-500 "}
                 />
                 <ButtonWrapper
                   className={"w-full "}
                   children={"Cancel"}
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => navigate("/")}
                 />
               </form>
             </div>

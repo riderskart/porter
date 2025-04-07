@@ -19,16 +19,17 @@ const apiKeySchema = new mongoose.Schema(
     expiresAt: Date,
     type: {
       type: String,
-      enum: ["Testing", "Production"],
+      enum: ["testing", "production"],
       required: true,
-    },
-    requested: {
-      type: Boolean,
-      default: true,
     },
 
     // scopes: [String], // e.g., ['products:read', 'users:read']
-    isActive: { type: Boolean, default: true },
+    isActive: { type: Boolean, default: false },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );

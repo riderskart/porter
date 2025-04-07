@@ -4,6 +4,9 @@ import { FetchData } from "../../Utils/fetchFromAPI";
 import { Link, useParams } from "react-router-dom";
 import { alertSuccess } from "../../Utils/Alert";
 import { useSelector } from "react-redux";
+import { truncateString } from "../../Utils/Utility-functions";
+import ApiKeyCard from "../../Components/apiCard";
+import PopUp from "../../Components/PopUpWrapper";
 
 const Home2 = () => {
   const offerFormRef = useRef(null);
@@ -16,7 +19,8 @@ const Home2 = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [showOfferForm, setShowOfferForm] = useState(false);
-  const [vehicleFilter, setVehicleFilter] = useState("")
+  const [vehicleFilter, setVehicleFilter] = useState("");
+  const [apiDetails, setApiDetails] = useState(null);
 
   const user = useSelector((store) => store.UserInfo.user);
 
@@ -91,7 +95,7 @@ const Home2 = () => {
       const Response = await FetchData("admin/order/get-all-order", "get");
       const data = Response?.data?.data;
 
-      // console.log(data);
+      console.log(Response);
 
       if (Array.isArray(data)) {
         setSections((prevSections) => ({
@@ -197,10 +201,37 @@ const Home2 = () => {
       }
     };
 
+    const fetchAPIData = async () => {
+      const Response = await FetchData("admin/api-key/", "get");
+      const data = Response?.data?.data;
+
+      console.log(Response);
+      if (Array.isArray(data)) {
+        setSections((prevSections) => ({
+          ...prevSections,
+          ApiKey: {
+            ...prevSections.ApiKey,
+            tableData: data.map((api, i) => ({
+              Sl_No: i + 1,
+              key: api.key,
+              type: api.type,
+              user: api.user.name,
+              status: api.status,
+              expiry: formatDate(api.expiresAt),
+              createdAt: formatDate(api.createdAt),
+            })),
+          },
+        }));
+      } else {
+        console.error("Expected an array but got:", data);
+      }
+    };
+
     fetchAllOrders();
     fetchUsers();
     fetchDeliveryPartners();
     fetchVerifiedDeliveryPartners();
+    fetchAPIData();
   }, []);
 
   const OfferFilteredData = sections[selectedSection]?.tableData.filter(
@@ -241,7 +272,6 @@ const Home2 = () => {
       );
     }
   );
-
 
   const extractUserIds = (filteredData) => {
     // Use a Set to avoid duplicate user IDs
@@ -502,45 +532,84 @@ const Home2 = () => {
                         index % 2 === 0 ? "bg-gray-100" : "bg-white"
                       }`}
                     >
-                      {Object.values(row).map((cell, i) => (
-                        <td
-                          key={i}
-                          className="px-1 py-1 border border-gray-300 text-center "
-                        >
-                          {selectedSection === "All_Orders" && (
+                      {selectedSection === "All_Orders" &&
+                        Object.values(row).map((cell, i) => (
+                          <td
+                            key={i}
+                            className="px-1 py-1 border border-gray-300 text-center "
+                          >
                             <Link
                               to={`/current-order/${row.BookingId}`}
                               className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
                             >
                               {cell}
                             </Link>
-                          )}
-                          {selectedSection === "Users" && (
+                          </td>
+                        ))}
+                      {selectedSection === "Users" &&
+                        Object.values(row).map((cell, i) => (
+                          <td
+                            key={i}
+                            className="px-1 py-1 border border-gray-300 text-center "
+                          >
                             <Link
                               to={`/current-user/${row.UserId}`}
                               className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
                             >
                               {cell}
                             </Link>
-                          )}
-                          {selectedSection === "DeliveryPartner" && (
+                          </td>
+                        ))}
+                      {selectedSection === "DeliveryPartner" &&
+                        Object.values(row).map((cell, i) => (
+                          <td
+                            key={i}
+                            className="px-1 py-1 border border-gray-300 text-center "
+                          >
                             <Link
                               to={`/current-pending-request/${row.RequestId}`}
                               className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
                             >
                               {cell}
                             </Link>
-                          )}
-                          {selectedSection === "VerifiedDeliveryPartner" && (
+                          </td>
+                        ))}
+                      {selectedSection === "VerifiedDeliveryPartner" &&
+                        Object.values(row).map((cell, i) => (
+                          <td
+                            key={i}
+                            className="px-1 py-1 border border-gray-300 text-center "
+                          >
                             <Link
                               to={`/current-verified-partner/${row.PartnerId}`}
                               className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
                             >
                               {cell}
                             </Link>
-                          )}
-                        </td>
-                      ))}
+                          </td>
+                        ))}
+                      {selectedSection === "ApiKey" &&
+                        Object.entries(row).map(([key, value], i) => (
+                          <td
+                            key={i}
+                            className="px-1 py-1 border border-gray-300 text-center "
+                          >
+                            <Link
+                              to={`#`}
+                              onClick={() => setApiDetails(row)}
+                              className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
+                            >
+                              {key === "key"
+                                ? truncateString(value, 20) // or your custom function
+                                : value}
+                            </Link>
+                          </td>
+                        ))}
+                      {apiDetails !== null && selectedSection === "ApiKey" && (
+                        <PopUp onClose={() => setApiDetails(null)}>
+                          <ApiKeyCard apiKey={apiDetails} />
+                        </PopUp>
+                      )}
                     </tr>
                   ))}
                 </tbody>

@@ -294,11 +294,10 @@ const DeleteUser = asyncHandler(async (req, res) => {
 });
 
 const RequestForAPIKey = asyncHandler(async (req, res) => {
-
   const { expiresAt, type } = req.body;
 
   if (!type) throw new ApiError(400, "Type is required");
-  if (type !== "Testing" && type !== "Production")
+  if (type !== "testing" && type !== "production")
     throw new ApiError(400, "Invalid type");
 
   const user = await User.findById(req.user._id);
@@ -307,7 +306,7 @@ const RequestForAPIKey = asyncHandler(async (req, res) => {
 
   if (expiresAt && new Date(expiresAt) <= new Date())
     throw new ApiError(400, "Expiration date must be in the future");
-  
+
   const key = generateApiKey();
 
   const apiKey = new ApiKey({
@@ -318,7 +317,6 @@ const RequestForAPIKey = asyncHandler(async (req, res) => {
   });
 
   await apiKey.save();
-  
 
   res
     .status(201)

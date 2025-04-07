@@ -13,6 +13,7 @@ async function apiKeyAuth(req, res, next) {
     const keyDoc = await ApiKey.findOne({
       key: apiKey,
       isActive: true,
+      status: "approved",
     }).populate("user", "-password -__v");
 
     if (!keyDoc) {

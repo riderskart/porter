@@ -51,7 +51,7 @@ const corsOptionsBackend = {
   exposedHeaders: ["X-RateLimit-Limit", "X-RateLimit-Remaining"],
 };
 
-app.options("*", cors()); // ✅ Explicitly handle preflight requests
+// app.options("*", cors()); // ✅ Explicitly handle preflight requests
 // app.use(cors(corsOptions));
 
 // For frontend browsers (strict CORS)
@@ -69,8 +69,8 @@ app.use(cookieParser());
 socketSetup(io);
 
 app.use((req, res, next) => {
+  console.log("Request from: ", req.method, ", ", req.url);
   console.log("Request Body: ", req.body);
-  console.log("Request Params: ", req.params);
   next();
 });
 
@@ -97,9 +97,9 @@ app.use("/api/v1/payment", paymentRouter);
 app.use("/public/api/v1", publicRoutes);
 
 // ** Error Handling Middleware **
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ success: false, message: "Internal Server Error" });
-});
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).json({ success: false, message: "Internal Server Error" });
+// });
 
 export { app, server, io };

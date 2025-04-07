@@ -28,11 +28,12 @@ import {
   deleteApiKey,
   getAllApiKeys,
   getRequestedAPIs,
+  rejectApiKeyRequest,
 } from "../controllers/api-key.controller.js";
 
 const router = Router();
 
-router.use(VerifyAdmin);
+// router.use(VerifyAdmin);
 //---------------- routes for admin only ----------------//
 
 //-----------------Route for admin Login --------------------------------//
@@ -71,6 +72,7 @@ router.route("/api-key/requested").get(getRequestedAPIs);
 router
   .route("/api-key/activity/:id")
   .post(activateApiKey)
+  .patch(rejectApiKeyRequest)
   .delete(deactivateApiKey);
 router.route("/api-key/delete/:id").delete(deleteApiKey);
 

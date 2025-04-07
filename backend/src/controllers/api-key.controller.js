@@ -30,6 +30,7 @@ const createApiKey = asyncHandler(async (req, res) => {
     expiresAt,
     type,
     isActive: true,
+    status: "approved",
   });
 
   await apiKey.save();
@@ -44,11 +45,12 @@ const activateApiKey = asyncHandler(async (req, res) => {
 
   if (!apiKeyId) throw new ApiError(400, "API key ID is required");
 
-  const apiKey = await ApiKey.findById(apiKeyId);
+  const apiKey = await ApiKey.findOne({ key: apiKeyId });
 
   if (!apiKey) throw new ApiError(404, "API key not found");
 
   apiKey.isActive = true;
+  apiKey.status = "approved"; // Set status to active
   await apiKey.save();
 
   res
@@ -56,12 +58,30 @@ const activateApiKey = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, null, "API key activated successfully"));
 });
 
+const rejectApiKeyRequest = asyncHandler(async (req, res) => {
+  const apiKeyId = req.params.id;
+
+  if (!apiKeyId) throw new ApiError(400, "API key ID is required");
+
+  const apiKey = await ApiKey.findOne({ key: apiKeyId });
+
+  if (!apiKey) throw new ApiError(404, "API key not found");
+
+  apiKey.isActive = false; // Deactivate the API key
+  apiKey.status = "rejected"; // Set status to rejected
+  await apiKey.save();
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "API key request rejected successfully"));
+});
+
 const deactivateApiKey = asyncHandler(async (req, res) => {
   const apiKeyId = req.params.id;
 
   if (!apiKeyId) throw new ApiError(400, "API key ID is required");
 
-  const apiKey = await ApiKey.findById(apiKeyId);
+  const apiKey = await ApiKey.findOne({ key: apiKeyId });
 
   if (!apiKey) throw new ApiError(404, "API key not found");
 
@@ -74,7 +94,7 @@ const deactivateApiKey = asyncHandler(async (req, res) => {
 });
 
 const getAllApiKeys = asyncHandler(async (req, res) => {
-  const keys = await ApiKey.find({});
+  const keys = await ApiKey.find({}).populate("user", "name");
   res
     .status(200)
     .json(new ApiResponse(200, keys, "API keys retrieved successfully"));
@@ -100,7 +120,7 @@ const deleteApiKey = asyncHandler(async (req, res) => {
 
   if (!apiKeyId) throw new ApiError(400, "API key ID is required");
 
-  const apiKey = await ApiKey.findByIdAndDelete(apiKeyId);
+  const apiKey = await ApiKey.findOneAndDelete({ key: apiKeyId });
 
   if (!apiKey) throw new ApiError(404, "API key not found");
 
@@ -112,6 +132,7 @@ const deleteApiKey = asyncHandler(async (req, res) => {
 export {
   createApiKey,
   activateApiKey,
+  rejectApiKeyRequest,
   deactivateApiKey,
   getAllApiKeys,
   deleteApiKey,

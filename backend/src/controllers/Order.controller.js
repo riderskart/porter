@@ -33,7 +33,6 @@ export const FindNearbyDrivers = async (Coordinates, Radius = 5000) => {
   }
 };
 
-
 const PushNotification = async (allDrivers, createdOrder) => {
   allDrivers.map(async (driver, index) => {
     driver.allAppointments.push(createdOrder._id);
@@ -295,7 +294,7 @@ const GetAllOrders = asyncHandler(async (req, res) => {
   if (orders.length === 0) {
     res
       .status(201)
-      .json(new ApiResponse(201, "No users found", "Got the data"));
+      .json(new ApiResponse(201, "No Orders found", "Got the data"));
   }
 
   res.status(201).json(new ApiResponse(201, orders, "All Orders"));
