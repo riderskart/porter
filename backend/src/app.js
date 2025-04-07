@@ -36,16 +36,30 @@ const imagekit = new ImageKit({
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
 });
 
-// ** CORS Configuration **
-const corsOptions = {
+// ** CORS Configuration for frontend **
+const corsOptionsFrontend = {
   origin: allowedOrigins,
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-// app.options("*", cors(corsOptions)); // ✅ Explicitly handle preflight requests
-app.use(cors(corsOptions));
+const corsOptionsBackend = {
+  origin: true, // Allow any origin (since API keys protect access)
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-API-Key"],
+  exposedHeaders: ["X-RateLimit-Limit", "X-RateLimit-Remaining"],
+};
+
+app.options("*", cors()); // ✅ Explicitly handle preflight requests
+// app.use(cors(corsOptions));
+
+// For frontend browsers (strict CORS)
+app.use("/api/v1", cors(corsOptionsFrontend));
+
+// For backend APIs (more permissive)
+app.use("/public/api/v1", cors(corsOptionsBackend));
+
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -71,12 +85,16 @@ import driverRouter from "./routes/driver.routes.js";
 import orderRouter from "./routes/order.routes.js";
 import adminRouter from "./routes/admin.routes.js";
 import paymentRouter from "./routes/payment.routes.js";
+import publicRoutes from "./routes/public.routes.js";
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/driver", driverRouter);
 app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/payment", paymentRouter);
+
+// Public API routes (for backend access)
+app.use("/public/api/v1", publicRoutes);
 
 // ** Error Handling Middleware **
 app.use((err, req, res, next) => {
