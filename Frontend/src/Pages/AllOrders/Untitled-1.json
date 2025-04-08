@@ -1,0 +1,40 @@
+{
+    "sender": {
+        "pickup": {
+            "lat": 23.412493937013437,
+            "long": 85.22944063510043
+        },
+        "name": "Elton Gamble",
+        "email": "jasyh@mailinator.com",
+        "number": 332,
+        "houseAddress": "433"
+    },
+    "receiver": {
+        "drop": {
+            "lat": 23.378967662926954,
+            "long": 85.31496329095134
+        },
+        "name": "Alana Obrien",
+        "email": "humacokil@mailinator.com",
+        "number": 65,
+        "houseAddress": 266
+    },
+    "productDetails": {
+        "Dimension": {
+            "length": 27,
+            "width": 25,
+            "height": 24
+        },
+        "productType": "Books & Stationary",
+        "productWeight": 27,
+        "value": 10
+    },
+    "_id": "6719f48a93ea3c4e42a5fd0f",
+    "user": "670e6f5a61104050f874531c",
+    "vehicle": "Bike",
+    "status": "created",
+    "paymentStatus": "pending",
+    "createdAt": "2024-10-24T07:17:30.808Z",
+    "updatedAt": "2024-10-24T07:17:30.808Z",
+    "__v": 0
+}
